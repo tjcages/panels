@@ -48,3 +48,9 @@ jobs:
         run: node scripts/check-bundle-size.mjs
       - name: Test setup CLI
         run: node scripts/test-setup-cli.mjs
+      - name: Check Claude plugin manifests
+        run: node scripts/check-plugin-manifest.mjs
+      - name: Build playground / docs site
+        run: |
+          pnpm --dir playground install --frozen-lockfile
+          pnpm --dir playground build

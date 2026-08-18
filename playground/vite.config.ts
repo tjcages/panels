@@ -8,6 +8,7 @@ const panelsEntry = fileURLToPath(new URL("../src/index.ts", import.meta.url))
 
 export default defineConfig({
   root: playgroundRoot,
+  base: process.env.PAGES_BASE || "/",
   plugins: [react()],
   resolve: {
     alias: {

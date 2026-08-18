@@ -49,6 +49,7 @@
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "test:setup": "node scripts/test-setup-cli.mjs",
+    "check:plugin": "node scripts/check-plugin-manifest.mjs",
     "prepare": "npm run build",
     "prepublishOnly": "pnpm typecheck && pnpm build"
   },

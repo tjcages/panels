@@ -1,0 +1,19 @@
+{
+  "name": "tjcages-panels",
+  "owner": {
+    "name": "tjcages",
+    "url": "https://github.com/tjcages"
+  },
+  "metadata": {
+    "description": "Live React control panel skill for @tjcages/panels"
+  },
+  "plugins": [
+    {
+      "name": "panels",
+      "source": "./",
+      "description": "Add a live React control panel with usePanel from @tjcages/panels.",
+      "category": "development",
+      "tags": ["react", "devtools", "panels"]
+    }
+  ]
+}
