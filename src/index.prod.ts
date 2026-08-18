@@ -265,7 +265,6 @@ export const ToolPanel = NULL_COMPONENT
 export const PanelToolPanel = NULL_COMPONENT
 export const PanelToggleButton = NULL_COMPONENT
 export const EyeToggle = NULL_COMPONENT
-export const PanelShortcutBridge = NULL_COMPONENT
 export const ControlSlider = NULL_COMPONENT
 export const ControlSection = NULL_COMPONENT
 export const ControlColorInput = NULL_COMPONENT
@@ -286,9 +285,65 @@ export const ControlVec2 = NULL_COMPONENT
 export const ControlPresets = NULL_COMPONENT
 export const ControlCollection = NULL_COMPONENT
 export const ControlReference = NULL_COMPONENT
-export const ControlQuickActions = NULL_COMPONENT
 export const ControlAnimation = NULL_COMPONENT
 
 export const TOOL_PANEL_WIDTH = 280
 export const TOOL_PANEL_INSET = 16
 export const TOOL_PANEL_FULL = 296
+
+// --- Connect panel UI port (OFF-455) — dev/prod export parity ---------------
+// Pure helpers stay real (no UI deps); components become null renders and the
+// style strings empty, matching the rest of the prod entry.
+export {
+  GRADIENT_STOP_MAX,
+  GRADIENT_STOP_MIN,
+  addGradientStop,
+  defaultGradientStops,
+  gradientCss,
+  moveGradientStop,
+  moveGradientStopOffset,
+  normalizeGradientStops,
+  rasterizeGradientField,
+  recolorGradientStop,
+  removeGradientStop,
+  sampleGradientRgb,
+  serializeGradientStops,
+  sortGradientStops,
+} from "./lib/gradient"
+export {
+  DEFAULT_CUSTOM_EASING,
+  EASING_OPTIONS,
+  easeValue,
+  formatCustomEasing,
+  parseCustomEasing,
+} from "./lib/easing"
+export {
+  cssColorForHex,
+  findLibraryColor,
+  findLibraryColorByHex,
+  p3ColorForHex,
+  p3CssFromHex,
+  supportsDisplayP3Color,
+} from "./lib/color-library"
+export { fromEditable, toEditable } from "./lib/stripe-adapter"
+export { embedPngDpi, printMaxEdgePx } from "./lib/png-dpi"
+export { clearPersistedPanelSections } from "./persist"
+export const PANEL_THEME_STORAGE_KEY = "shader-dev-theme"
+export const applyPanelTheme = NOOP
+export const ControlAction = NULL_COMPONENT
+export const ControlActionGroup = NULL_COMPONENT
+export const ControlDisclosure = NULL_COMPONENT
+export const ControlGradientStops = NULL_COMPONENT
+export const ControlHint = NULL_COMPONENT
+export const ControlLibraryColor = NULL_COMPONENT
+export const ControlOptionList = NULL_COMPONENT
+export const ControlReadout = NULL_COMPONENT
+export const ControlSearchField = NULL_COMPONENT
+export const ControlStripeColorsTable = NULL_COMPONENT
+export const ControlTextInput = NULL_COMPONENT
+export const ControlTextarea = NULL_COMPONENT
+export const ControlThemeToggle = NULL_COMPONENT
+export const EasingGraph = NULL_COMPONENT
+export const NativeColorSwatch = NULL_COMPONENT
+export const gradientStopsStyles = ""
+export const stripeColorsTableStyles = ""
