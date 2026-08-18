@@ -78,12 +78,25 @@
     "url": "https://github.com/tjcages/shader-panel/issues"
   },
   "peerDependencies": {
+    "@react-three/fiber": ">=8",
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "three": ">=0.150"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@react-three/fiber": "^9.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.169.0",
+    "three": "^0.169.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },

@@ -25,7 +25,6 @@ const GIF_DURATION_OPTIONS = [2, 3, 5, 8] as const
 const GIF_FPS_OPTIONS = [10, 12, 15] as const
 const GIF_DEFAULT_DURATION_SEC = 3
 const GIF_DEFAULT_FPS = 12
-const GIF_MAX_EDGE = 720
 
 type ResPreset = {
   label: string
@@ -33,6 +32,14 @@ type ResPreset = {
   /** When set, included in export status / filename hints. */
   printHint?: string
 }
+
+/** GIF targets — longest edge. Kept well below PNG presets; GIFs grow fast. */
+const GIF_RES_PRESETS: ResPreset[] = [
+  { label: "720", maxEdge: 720 },
+  { label: "1080", maxEdge: 1080 },
+  { label: "1440", maxEdge: 1440 },
+]
+const GIF_DEFAULT_RES_INDEX = 0
 
 /** Screen targets — pixel longest edge. */
 const SCREEN_RES_PRESETS: ResPreset[] = [
@@ -236,6 +243,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
     GIF_DEFAULT_DURATION_SEC,
   )
   const [gifFps, setGifFps] = useState<number>(GIF_DEFAULT_FPS)
+  const [gifResIndex, setGifResIndex] = useState(GIF_DEFAULT_RES_INDEX)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const webCodecsRef = useRef<WebCodecsMp4Recorder | null>(null)
   const hostVideoRef = useRef<ShaderVideoSession | null>(null)
@@ -531,29 +539,33 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
       return flash("GIF export not available")
     }
 
+    const preset = GIF_RES_PRESETS[gifResIndex] ?? GIF_RES_PRESETS[0]!
     setGifBusy(true)
     const frames = Math.round(gifDurationSec * gifFps)
-    flash(`Rendering GIF (${frames} frames)…`, 120000)
+    flash(
+      `Rendering GIF (${preset.label}p · ${frames} frames)…`,
+      120000,
+    )
     try {
       const blob = await gifExport({
         durationSec: gifDurationSec,
         fps: gifFps,
-        maxEdge: GIF_MAX_EDGE,
+        maxEdge: preset.maxEdge,
         onProgress: (progress) => {
           flash(
-            `Rendering GIF… ${Math.round(progress * 100)}%`,
+            `Rendering GIF (${preset.label}p)… ${Math.round(progress * 100)}%`,
             120000,
           )
         },
       })
-      downloadBlob(blob, `${fileBase(name)}.gif`)
-      flash("GIF saved")
+      downloadBlob(blob, `${fileBase(name)}-${preset.label}p.gif`)
+      flash(`GIF saved (${preset.label}p)`)
     } catch (e) {
       flash(e instanceof Error ? e.message : "GIF export failed")
     } finally {
       setGifBusy(false)
     }
-  }, [flash, gifDurationSec, gifFps, name])
+  }, [flash, gifDurationSec, gifFps, gifResIndex, name])
 
   // Tear down an in-flight recording if the panel unmounts.
   useEffect(() => {
@@ -668,6 +680,28 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
 
       <div className="panel-export-gif">
         <div className="panel-export-gif-label">GIF</div>
+        <div
+          className="panel-export-gif-row"
+          role="group"
+          aria-label="GIF resolution"
+        >
+          {GIF_RES_PRESETS.map((preset, i) => (
+            <button
+              key={preset.label}
+              type="button"
+              className={cn(
+                "panel-export-res-btn",
+                i === gifResIndex && "panel-export-res-active",
+              )}
+              aria-pressed={i === gifResIndex}
+              title={`${preset.maxEdge}px longest edge`}
+              onClick={() => setGifResIndex(i)}
+              disabled={controlsLocked}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
         <div className="panel-export-gif-row" role="group" aria-label="GIF duration">
           {GIF_DURATION_OPTIONS.map((sec) => (
             <button
@@ -710,7 +744,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
         >
           {gifBusy
             ? "Rendering GIF…"
-            : `Export GIF · ${gifDurationSec}s @ ${gifFps}fps`}
+            : `Export GIF · ${GIF_RES_PRESETS[gifResIndex]?.label ?? "720"}p · ${gifDurationSec}s @ ${gifFps}fps`}
         </button>
       </div>
 

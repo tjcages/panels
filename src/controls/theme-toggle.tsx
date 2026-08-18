@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "../lib/cn"
+import { ControlToggleGroup } from "./toggle-group"
 import {
   applyPanelTheme,
   usePanelTheme,
@@ -19,39 +20,16 @@ export function ControlThemeToggle({
 }: ControlThemeToggleProps) {
   const theme = usePanelTheme()
 
-  const setTheme = (mode: PanelTheme) => {
-    applyPanelTheme(mode, storageKey)
-  }
-
   return (
-    <div
+    <ControlToggleGroup
       className={cn("panel-theme-toggle", className)}
-      role="group"
-      aria-label="Color theme"
-    >
-      <button
-        type="button"
-        className="panel-theme-toggle-btn"
-        data-panel-active={theme === "light" ? "true" : "false"}
-        aria-pressed={theme === "light"}
-        aria-label="Light theme"
-        title="Light"
-        onClick={() => setTheme("light")}
-      >
-        <SunIcon />
-      </button>
-      <button
-        type="button"
-        className="panel-theme-toggle-btn"
-        data-panel-active={theme === "dark" ? "true" : "false"}
-        aria-pressed={theme === "dark"}
-        aria-label="Dark theme"
-        title="Dark"
-        onClick={() => setTheme("dark")}
-      >
-        <MoonIcon />
-      </button>
-    </div>
+      value={theme}
+      onChange={(v) => applyPanelTheme(v as PanelTheme, storageKey)}
+      options={[
+        { value: "light", icon: <SunIcon /> },
+        { value: "dark", icon: <MoonIcon /> },
+      ]}
+    />
   )
 }
 

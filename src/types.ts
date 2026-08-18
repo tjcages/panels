@@ -1,3 +1,5 @@
+import type { ColorLibrary } from "./lib/color-library"
+
 export type PanelSide = "left" | "right"
 
 export type PanelSectionField = {
@@ -21,6 +23,19 @@ export type PanelColorField<T extends Record<string, unknown>> = {
   type: "color"
   key: keyof T & string
   label: string
+  /**
+   * Named color library. When set the field renders as a library color row —
+   * swatch + token display (`Orange / 900 [Accent]`) for matching hexes.
+   */
+  library?: ColorLibrary
+  /**
+   * Accepts null values with a clear (×) affordance — the value reads as
+   * "Transparent" when unset. Mirrors the site schemas' persist option so
+   * they stay portable; the package itself does no extra persistence.
+   */
+  persist?: "backgroundColor"
+  /** Optional one-line hint rendered as small muted text above the color field. */
+  description?: string
 }
 
 export type PanelToggleField<T extends Record<string, unknown>> = {
@@ -43,6 +58,25 @@ export type PanelSelectField<T extends Record<string, unknown>> = {
   options: ReadonlyArray<PanelSelectOption>
   /** Label above control (default) or on the same row. */
   layout?: "inline" | "stacked"
+  description?: string
+}
+
+export type PanelToggleGroupOption = {
+  value: string | number
+  /** Text label. Omit when using an icon-only option. */
+  label?: string
+}
+
+/**
+ * Segmented single-select control — N option buttons sharing one track, the
+ * selected value highlighted. Options render as text (via `label`); icon
+ * options are only available when constructing `ControlToggleGroup` directly.
+ */
+export type PanelToggleGroupField<T extends Record<string, unknown>> = {
+  type: "toggle-group"
+  key: keyof T & string
+  label: string
+  options: ReadonlyArray<PanelToggleGroupOption>
   description?: string
 }
 
@@ -100,6 +134,55 @@ export type PanelPathField<T extends Record<string, unknown>> = {
   min: number
   max: number
   anchorKey?: keyof T & string
+  description?: string
+}
+
+/**
+ * Gradient stop editor. The value at `key` is a `GradientStop[]` (or a
+ * serialized JSON string of one — both normalize on render): colored hotspots
+ * on a unit plane, edited on a 2D field preview (or a 1D ramp track) with
+ * draggable stops, add/remove, and per-stop color via the color popover.
+ */
+export type PanelGradientStopsField<T extends Record<string, unknown>> = {
+  type: "gradient-stops"
+  key: keyof T & string
+  label: string
+  /** Named color library for token display on the selected stop. */
+  library?: ColorLibrary
+  /** `field` (2D hotspot plane, default) or `ramp` (1D stop track). */
+  layout?: "field" | "ramp"
+  description?: string
+}
+
+export type PanelStripeTableOptions = {
+  /** Show the brightness-ramp easing select + graph. */
+  showRampEasing?: boolean
+  /** Show per-row color swatches. Default `true`; off = image-driven levels. */
+  showColorControls?: boolean
+  /**
+   * Show a "Save palette" button — wire the handler via `actionHandlers`
+   * under the key `` `${field.key}:savePalette` ``.
+   */
+  showSavePalette?: boolean
+  /** Sibling config key holding the ramp easing string (`EasingName`). */
+  rampEasingKey?: string
+  /** Sibling config key holding the threshold easing string. */
+  thresholdEasingKey?: string
+}
+
+/**
+ * Stripe rows table. The value at `key` is an `EditableStripe[]` — per row a
+ * color swatch, opacity/threshold/width sliders, drag reorder, add/remove,
+ * and a flip-color-order action. Easing selects read/write sibling keys named
+ * in `options`.
+ */
+export type PanelStripeTableField<T extends Record<string, unknown>> = {
+  type: "stripe-table"
+  key: keyof T & string
+  label: string
+  options?: PanelStripeTableOptions
+  /** Named color library for token display + wide-gamut swatches. */
+  library?: ColorLibrary
   description?: string
 }
 
@@ -215,9 +298,12 @@ export type PanelField<T extends Record<string, unknown>> =
   | PanelColorField<T>
   | PanelToggleField<T>
   | PanelSelectField<T>
+  | PanelToggleGroupField<T>
   | PanelVec2Field<T>
   | PanelImageField<T>
   | PanelPathField<T>
+  | PanelGradientStopsField<T>
+  | PanelStripeTableField<T>
   | PanelActionField
   | PanelPresetsField<T>
   | PanelCollectionField<T>

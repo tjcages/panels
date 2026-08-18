@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sun-shader",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "/Users/ty/Workspace/cloudflare-sun-shader", "dev", "--port", "4321"],
+      "port": 4321
+    }
+  ]
+}

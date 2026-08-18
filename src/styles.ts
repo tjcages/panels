@@ -6,66 +6,82 @@
  *
  * Class names are all `.panel-*` prefixed so they cannot collide with host app
  * styles even when the panel portals into `document.body`.
+ *
+ * Skin: the lab/leva dev panel — opaque #1c1c1c dark frame (light #ffffff),
+ * one 11px Inter/system text size, compact ~24px control rows on #2a2a2a
+ * surfaces with 4px radii, thin translucent scrollbars, and a bottom fade
+ * mask while content is cut off below the fold.
  */
 
 export const PANEL_STYLE_ID = "shader-dev-styles"
 
 export const PANEL_CSS = `
 [data-panel] {
-  --panel-bg: rgba(13, 13, 16, 0.95);
-  --panel-border: rgba(255, 255, 255, 0.16);
-  --panel-text: #ffffff;
-  --panel-text-muted: rgba(255, 255, 255, 0.72);
-  --panel-surface: rgba(255, 255, 255, 0.05);
-  --panel-surface-active: rgba(255, 255, 255, 0.15);
-  --panel-toggle-hover: var(--panel-surface-active);
-  --panel-surface-idle-fill: rgba(255, 255, 255, 0.11);
-  --panel-hash: rgba(255, 255, 255, 0.15);
-  --panel-handle: #ffffff;
-  --panel-label: rgba(255, 255, 255, 0.7);
-  --panel-label-active: #ffffff;
-  --panel-divider: rgba(255, 255, 255, 0.06);
-  --panel-muted-icon: rgba(255, 255, 255, 0.4);
-  --panel-swatch-border: rgba(255, 255, 255, 0.2);
-  --panel-kbd-bg: rgba(255, 255, 255, 0.1);
-  --panel-action-bg: rgba(255, 255, 255, 0.05);
-  --panel-action-bg-hover: rgba(255, 255, 255, 0.1);
-  --panel-action-text: rgba(255, 255, 255, 0.72);
-  --panel-action-text-hover: #ffffff;
+  --panel-bg: #1c1c1c;
+  --panel-border: #262626;
+  --panel-text: #d4d4d4;
+  --panel-text-muted: #737373;
+  --panel-surface: #2a2a2a;
+  --panel-surface-active: #313131;
+  --panel-toggle-hover: #242424;
+  --panel-surface-idle-fill: #333333;
+  --panel-hash: rgba(255, 255, 255, 0.12);
+  --panel-handle: #a3a3a3;
+  --panel-label: #d4d4d4;
+  --panel-label-active: #ededed;
+  --panel-label-muted: #737373;
+  --panel-divider: #262626;
+  --panel-muted-icon: #6f6f6f;
+  --panel-swatch-border: #4a4a4a;
+  --panel-kbd-bg: #2a2a2a;
+  --panel-action-bg: #2a2a2a;
+  --panel-action-bg-hover: #313131;
+  --panel-action-text: #d4d4d4;
+  --panel-action-text-hover: #ededed;
   --panel-danger: #f87171;
   --panel-danger-hover: #fca5a5;
-  --panel-header-border: rgba(255, 255, 255, 0.096);
-  --panel-close-icon: rgba(255, 255, 255, 0.72);
-  --panel-close-icon-hover: #ffffff;
-  --panel-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --panel-header-border: transparent;
+  --panel-close-icon: #d4d4d4;
+  --panel-close-icon-hover: #ededed;
+  --panel-scrollbar-thumb: rgba(255, 255, 255, 0.25);
+  --panel-shadow: 0 1px 2px rgb(0 0 0 / 0.28), 0 12px 32px rgb(0 0 0 / 0.32);
 }
 
 [data-panel][data-panel-theme="light"] {
-  --panel-bg: rgba(255, 255, 255, 0.95);
-  --panel-border: #d1d5db;
-  --panel-text: #111827;
-  --panel-text-muted: #4b5563;
-  --panel-surface: #f3f4f6;
-  --panel-surface-active: #d1d5db;
-  --panel-toggle-hover: rgba(17, 24, 39, 0.04);
-  --panel-surface-idle-fill: #e5e7eb;
-  --panel-hash: #d1d5db;
-  --panel-handle: #111827;
-  --panel-label: #374151;
-  --panel-label-active: #111827;
-  --panel-divider: #e5e7eb;
-  --panel-muted-icon: #9ca3af;
-  --panel-swatch-border: #d1d5db;
-  --panel-kbd-bg: #e5e7eb;
-  --panel-action-bg: #f3f4f6;
-  --panel-action-bg-hover: #e5e7eb;
-  --panel-action-text: #374151;
-  --panel-action-text-hover: #111827;
+  --panel-bg: #ffffff;
+  --panel-border: #f3f3f3;
+  --panel-text: #525252;
+  --panel-text-muted: #737373;
+  --panel-surface: #eeeeee;
+  --panel-surface-active: #e6e6e6;
+  --panel-toggle-hover: #f3f3f3;
+  --panel-surface-idle-fill: #e0e0e0;
+  --panel-hash: #d4d4d4;
+  --panel-handle: #8a8a8a;
+  --panel-label: #525252;
+  --panel-label-active: #404040;
+  --panel-label-muted: #737373;
+  --panel-divider: #f3f3f3;
+  --panel-muted-icon: #a3a3a3;
+  --panel-swatch-border: #d4d4d4;
+  --panel-kbd-bg: #eeeeee;
+  --panel-action-bg: #eeeeee;
+  --panel-action-bg-hover: #e6e6e6;
+  --panel-action-text: #525252;
+  --panel-action-text-hover: #404040;
   --panel-danger: #dc2626;
   --panel-danger-hover: #b91c1c;
-  --panel-header-border: #e5e7eb;
-  --panel-close-icon: #6b7280;
-  --panel-close-icon-hover: #111827;
+  --panel-header-border: transparent;
+  --panel-close-icon: #737373;
+  --panel-close-icon-hover: #404040;
+  --panel-scrollbar-thumb: rgba(0, 0, 0, 0.25);
+}
+
+/* Animatable fade height for the body's cut-off mask. */
+@property --panel-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
 }
 
 [data-panel],
@@ -130,9 +146,10 @@ export const PANEL_CSS = `
 }
 
 [data-panel] input.panel-color-text {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 13px;
-  font-weight: 500;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1;
   color: var(--panel-label);
 }
@@ -144,17 +161,18 @@ export const PANEL_CSS = `
   bottom: 16px;
   z-index: 9999;
   display: flex;
-  width: 280px;
+  width: 360px;
   flex-direction: column;
   opacity: 1;
   filter: blur(0);
   transition-property: transform, opacity, filter;
   transition-duration: 280ms, 200ms, 200ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease-in, ease-in;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .panel-floating[data-panel-side="left"] { left: 16px; }
 .panel-floating[data-panel-side="right"] { right: 16px; }
@@ -183,8 +201,142 @@ export const PANEL_CSS = `
   filter: blur(0);
   pointer-events: auto;
 }
+
+/* ── Free-float mode ──────────────────────────────────────────────────────
+   The drag hook owns left/top inline; the stylesheet stops animating the
+   frame so gestures never fight a transition. Collapse hides instantly —
+   the hook plays the scale-up entrance when the panel surfaces. */
+.panel-floating[data-panel-float="true"] {
+  bottom: auto;
+  max-height: calc(100dvh - 32px);
+  transition: none;
+}
+.panel-floating[data-panel-float="true"][data-panel-collapsed="true"] {
+  display: none;
+}
+.panel-floating[data-panel-float="true"] .panel-panel-header {
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Invisible resize hit areas, inset so the rounded frame stays clean. */
+.panel-resize {
+  position: absolute;
+  z-index: 1000;
+  touch-action: none;
+}
+.panel-resize-n, .panel-resize-s {
+  right: 12px;
+  left: 12px;
+  height: 5px;
+  cursor: ns-resize;
+}
+.panel-resize-e, .panel-resize-w {
+  top: 12px;
+  bottom: 12px;
+  width: 5px;
+  cursor: ew-resize;
+}
+.panel-resize-n { top: 0; }
+.panel-resize-s { bottom: 0; }
+.panel-resize-e { right: 0; }
+.panel-resize-w { left: 0; }
+.panel-resize-ne, .panel-resize-nw, .panel-resize-se, .panel-resize-sw {
+  width: 12px;
+  height: 12px;
+}
+.panel-resize-ne { top: 0; right: 0; cursor: nesw-resize; }
+.panel-resize-nw { top: 0; left: 0; cursor: nwse-resize; }
+.panel-resize-se { right: 0; bottom: 0; cursor: nwse-resize; }
+.panel-resize-sw { bottom: 0; left: 0; cursor: nesw-resize; }
+
+/* Hovering an edge handle shows a light pill inside that edge. */
+.panel-resize-n::after, .panel-resize-s::after,
+.panel-resize-e::after, .panel-resize-w::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.6);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.35, 1.55, 0.65, 1);
+}
+[data-panel][data-panel-theme="light"] .panel-resize-n::after,
+[data-panel][data-panel-theme="light"] .panel-resize-s::after,
+[data-panel][data-panel-theme="light"] .panel-resize-e::after,
+[data-panel][data-panel-theme="light"] .panel-resize-w::after {
+  background: rgb(0 0 0 / 0.35);
+}
+.panel-resize-e::after, .panel-resize-w::after {
+  top: 50%;
+  width: 3px;
+  height: 28px;
+  margin-top: -14px;
+}
+.panel-resize-n::after, .panel-resize-s::after {
+  left: 50%;
+  width: 28px;
+  height: 3px;
+  margin-left: -14px;
+}
+.panel-resize-w::after { left: 7px; }
+.panel-resize-e::after { right: 7px; }
+.panel-resize-n::after { top: 7px; }
+.panel-resize-s::after { bottom: 7px; }
+.panel-resize-n:hover::after, .panel-resize-s:hover::after,
+.panel-resize-e:hover::after, .panel-resize-w:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Snap hint: a pill OUTSIDE the panel on the side it will dock to, armed
+   via data-snap-x / data-snap-y while dragging near a viewport edge. */
+.panel-snap-hint {
+  pointer-events: none;
+  position: absolute;
+  z-index: 1001;
+  border-radius: 999px;
+  background: var(--panel-bg);
+  opacity: 0;
+  transition:
+    opacity 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.35, 1.55, 0.65, 1);
+}
+[data-panel][data-panel-theme="light"] .panel-snap-hint {
+  border: 1px solid var(--panel-border);
+}
+.panel-snap-hint-left, .panel-snap-hint-right {
+  top: 50%;
+  width: 4px;
+  height: 28px;
+  transform: translateY(-50%) scale(0.4);
+}
+.panel-snap-hint-top, .panel-snap-hint-bottom {
+  left: 50%;
+  width: 28px;
+  height: 4px;
+  transform: translateX(-50%) scale(0.4);
+}
+.panel-snap-hint-left { left: -8px; }
+.panel-snap-hint-right { right: -8px; }
+.panel-snap-hint-top { top: -8px; }
+.panel-snap-hint-bottom { bottom: -8px; }
+[data-snap-x="left"] .panel-snap-hint-left,
+[data-snap-x="right"] .panel-snap-hint-right {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+[data-snap-y="top"] .panel-snap-hint-top,
+[data-snap-y="bottom"] .panel-snap-hint-bottom {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
 @media (prefers-reduced-motion: reduce) {
   .panel-floating { transition: none; }
+  .panel-resize::after, .panel-snap-hint { transition: none; }
+  .panel-panel-body { transition: none; }
   .panel-floating[data-panel-collapsed="true"]:not([data-panel-peek="true"]) {
     opacity: 0;
     filter: none;
@@ -203,8 +355,7 @@ export const PANEL_CSS = `
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid var(--panel-border);
+  border-radius: 8px;
   background: var(--panel-bg);
   color: var(--panel-text);
   box-shadow: var(--panel-shadow);
@@ -247,7 +398,7 @@ export const PANEL_CSS = `
   position: absolute;
   inset: 0;
   z-index: 3;
-  border-radius: 14px;
+  border-radius: 8px;
   background: transparent;
   cursor: pointer;
 }
@@ -256,8 +407,10 @@ export const PANEL_CSS = `
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   border-bottom: 1px solid var(--panel-header-border);
-  padding: 10px 12px 6px 12px;
+  padding: 8px 8px 4px 16px;
+  font-size: 11px;
 }
 .panel-panel-title-row {
   display: flex;
@@ -267,8 +420,8 @@ export const PANEL_CSS = `
   flex: 1;
 }
 .panel-panel-title {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -279,89 +432,94 @@ export const PANEL_CSS = `
   align-items: center;
   gap: 4px;
 }
-.panel-theme-toggle {
-  display: flex;
-  align-items: center;
+/* Header variant of the toggle group — compact, icon-only, non-growing. */
+.panel-toggle-group.panel-theme-toggle {
+  width: auto;
+  padding: 0;
+}
+.panel-toggle-group.panel-theme-toggle .panel-toggle-group-track {
   gap: 2px;
   padding: 2px;
-  border-radius: 8px;
-  background: var(--panel-surface);
 }
-[data-panel] .panel-theme-toggle-btn {
-  display: inline-flex;
-  width: 26px;
-  height: 26px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  color: var(--panel-text-muted);
-  transition: background-color 150ms ease, color 150ms ease;
-}
-[data-panel] .panel-theme-toggle-btn svg {
-  width: 14px;
-  height: 14px;
-}
-[data-panel] .panel-theme-toggle-btn:hover {
-  color: var(--panel-action-text-hover);
-}
-[data-panel] .panel-theme-toggle-btn[data-panel-active="true"] {
-  background: var(--panel-surface-active);
-  color: var(--panel-label-active);
+[data-panel] .panel-toggle-group.panel-theme-toggle .panel-toggle-group-btn {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  padding: 0;
 }
 .panel-switcher {
   appearance: none;
   -webkit-appearance: none;
-  border: 1px solid var(--panel-border);
-  background: var(--panel-surface);
+  border: 0;
+  background: transparent;
   color: var(--panel-text);
-  border-radius: 6px;
-  padding: 2px 22px 2px 8px;
-  font-size: 12px;
+  border-radius: 4px;
+  padding: 3px 20px 3px 8px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1.4;
   cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position: calc(100% - 11px) 50%, calc(100% - 7px) 50%;
+  background-position: calc(100% - 10px) 50%, calc(100% - 6px) 50%;
   background-size: 4px 4px, 4px 4px;
   background-repeat: no-repeat;
   max-width: 110px;
   text-overflow: ellipsis;
   overflow: hidden;
+  transition: background-color 150ms ease;
 }
-.panel-switcher:focus { outline: 2px solid var(--panel-handle); outline-offset: 1px; }
+.panel-switcher:hover { background-color: var(--panel-surface); }
+.panel-switcher:focus { outline: none; background-color: var(--panel-surface); }
 
 .panel-close-btn {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 4px;
   color: var(--panel-close-icon);
-  transition-property: color, scale;
+  transition-property: color, background-color, scale;
   transition-duration: 150ms;
   transition-timing-function: ease-out;
 }
 .panel-close-btn::before {
   content: "";
   position: absolute;
-  inset: -10px;
+  inset: -8px;
 }
 .panel-close-btn:active {
   scale: 0.96;
 }
-.panel-close-btn:hover { color: var(--panel-close-icon-hover); }
-.panel-close-btn svg { width: 16px; height: 16px; }
+.panel-close-btn:hover,
+.panel-close-btn:focus-visible {
+  color: var(--panel-close-icon-hover);
+  background: var(--panel-surface);
+}
+.panel-close-btn svg { width: 12px; height: 12px; }
 
 .panel-panel-body {
+  min-height: 0;
   flex: 1;
+  overflow-x: hidden;
   overflow-y: auto;
-  padding: 10px 12px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overscroll-behavior: contain;
+  padding: 8px 8px 32px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-scrollbar-thumb) transparent;
+  /* Content fades out at the bottom while more of it is cut off below
+     (.panel-body-cut-off is toggled from the scroll/resize observer). */
+  mask-image: linear-gradient(
+    to bottom,
+    black calc(100% - var(--panel-fade)),
+    transparent 100%
+  );
+  transition: --panel-fade 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.panel-panel-body::-webkit-scrollbar { display: none; }
+.panel-panel-body.panel-body-cut-off {
+  --panel-fade: 56px;
+}
 
 .panel-fields {
   display: flex;
@@ -381,7 +539,7 @@ export const PANEL_CSS = `
 }
 .panel-animation-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--panel-text-muted);
@@ -394,9 +552,9 @@ export const PANEL_CSS = `
 }
 [data-panel] .panel-animation-btn {
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -405,21 +563,21 @@ export const PANEL_CSS = `
   transition: background-color 150ms ease, color 150ms ease;
 }
 [data-panel] .panel-animation-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 [data-panel] .panel-animation-btn:hover {
   background: var(--panel-action-bg-hover);
   color: var(--panel-action-text-hover);
 }
 [data-panel] .panel-animation-btn-primary {
-  width: 36px;
+  width: 28px;
   background: var(--panel-surface-active);
   color: var(--panel-label-active);
 }
 [data-panel] .panel-animation-btn-primary:hover {
   background: var(--panel-handle);
-  color: #ffffff;
+  color: var(--panel-bg);
 }
 [data-panel] .panel-animation-btn-reset {
   margin-left: auto;
@@ -428,21 +586,21 @@ export const PANEL_CSS = `
   flex: 1;
   min-width: 0;
   padding: 0 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
+  font-family: inherit;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
   color: var(--panel-text-muted);
   text-align: center;
 }
 
 .panel-shortcut-hint {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--panel-text-muted);
 }
 .panel-shortcut-hint kbd {
   border-radius: 4px;
   padding: 0 4px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: inherit;
   background: var(--panel-kbd-bg);
 }
 
@@ -465,13 +623,13 @@ export const PANEL_CSS = `
 }
 
 /* Scoped under [data-panel] to beat the global button reset on
-   specificity — otherwise the always-on light gray fill loses. */
+   specificity — otherwise the always-on surface fill loses. */
 [data-panel] .panel-action-btn {
   width: 100%;
-  height: 36px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
@@ -480,7 +638,7 @@ export const PANEL_CSS = `
   transition-timing-function: ease-out;
 }
 [data-panel] .panel-action-btn:active:not(:disabled) {
-  scale: 0.96;
+  scale: 0.98;
 }
 [data-panel] .panel-action-btn:hover:not(.panel-action-btn-primary):not(:disabled) {
   background: var(--panel-action-bg-hover);
@@ -530,7 +688,7 @@ export const PANEL_CSS = `
 
 .panel-status {
   padding: 0 4px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--panel-text-muted);
 }
 
@@ -546,7 +704,7 @@ export const PANEL_CSS = `
 }
 .panel-export-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--panel-text-muted);
@@ -575,7 +733,7 @@ export const PANEL_CSS = `
 }
 .panel-export-gif-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--panel-text-muted);
@@ -584,9 +742,9 @@ export const PANEL_CSS = `
 .panel-export-gif-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  padding: 3px;
-  border-radius: 8px;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 4px;
   background: var(--panel-surface);
 }
 [data-panel] .panel-export-gif-row .panel-export-res-btn {
@@ -603,9 +761,9 @@ export const PANEL_CSS = `
 .panel-export-res {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  padding: 3px;
-  border-radius: 8px;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 4px;
   background: var(--panel-surface);
 }
 [data-panel] .panel-export-res-screen .panel-export-res-btn,
@@ -614,11 +772,11 @@ export const PANEL_CSS = `
   min-width: 0;
 }
 [data-panel] .panel-export-res-btn {
-  min-width: 2.75rem;
-  height: 26px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
+  min-width: 2.5rem;
+  height: 20px;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1;
   color: var(--panel-text-muted);
   transition: background-color 150ms ease, color 150ms ease;
@@ -689,7 +847,7 @@ export const PANEL_CSS = `
   gap: 6px;
   padding: 4px 4px 2px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--panel-text-muted);
 }
 .panel-saved-dot {
@@ -713,19 +871,19 @@ export const PANEL_CSS = `
   width: 100%;
   min-height: 96px;
   resize: vertical;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--panel-bg);
+  padding: 8px;
+  border-radius: 4px;
+  background: var(--panel-surface);
   color: var(--panel-text);
-  border: 1px solid var(--panel-border);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 10px;
+  border: 0;
+  font-family: inherit;
+  font-size: 11px;
   line-height: 1.5;
   outline: none;
-  transition: border-color 150ms ease;
+  transition: background-color 150ms ease;
 }
 [data-panel] .panel-paste-textarea:focus {
-  border-color: var(--panel-handle);
+  background: var(--panel-surface-active);
 }
 [data-panel] .panel-paste-textarea::placeholder {
   color: var(--panel-muted-icon);
@@ -744,23 +902,22 @@ export const PANEL_CSS = `
   z-index: 9998;
   max-width: 280px;
   border-radius: 8px;
-  border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   color: var(--panel-text-muted);
   padding: 12px;
-  font-size: 13px;
+  font-size: 11px;
   box-shadow: var(--panel-shadow);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 .panel-empty-close {
   margin-top: 8px;
   display: block;
   width: 100%;
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: 4px;
+  padding: 6px 8px;
   background: var(--panel-action-bg);
   color: var(--panel-text);
-  font-size: 13px;
+  font-size: 11px;
 }
 .panel-empty-close:hover { background: var(--panel-action-bg-hover); }
 
@@ -773,7 +930,7 @@ export const PANEL_CSS = `
   width: 100%;
   align-items: center;
   gap: 4px;
-  padding: 12px 0 8px;
+  padding: 10px 0 6px;
 }
 .panel-section:first-child .panel-section-header { padding-top: 2px; }
 .panel-section-button {
@@ -782,11 +939,10 @@ export const PANEL_CSS = `
   min-width: 0;
   align-items: center;
   height: 20px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--panel-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--panel-text);
   text-align: left;
 }
 .panel-section-button:hover { color: var(--panel-label-active); }
@@ -846,7 +1002,7 @@ export const PANEL_CSS = `
 }
 
 .panel-field-description {
-  font-size: 10.5px;
+  font-size: 11px;
   line-height: 1.35;
   color: var(--panel-label-muted);
   padding: 4px 4px 2px;
@@ -855,7 +1011,7 @@ export const PANEL_CSS = `
 
 [data-panel] .panel-slider {
   position: relative;
-  height: 36px;
+  height: 24px;
   width: 100%;
   margin: 0;
   overflow: visible;
@@ -885,7 +1041,7 @@ export const PANEL_CSS = `
   user-select: none;
   overflow: hidden;
   touch-action: none;
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
 }
 
@@ -897,7 +1053,7 @@ export const PANEL_CSS = `
 .panel-slider-hash {
   position: absolute;
   top: 50%;
-  height: 8px;
+  height: 6px;
   width: 1px;
   transform: translateY(-50%);
   border-radius: 999px;
@@ -926,7 +1082,7 @@ export const PANEL_CSS = `
 .panel-slider-handle {
   position: absolute;
   top: 50%;
-  height: 20px;
+  height: 12px;
   width: 3px;
   left: var(--panel-handle-left, 0%);
   border-radius: 999px;
@@ -952,23 +1108,24 @@ export const PANEL_CSS = `
 
 .panel-slider-label {
   position: absolute;
-  left: 10px;
+  left: 8px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
 }
 .panel-slider-value {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 13px;
-  font-weight: 500;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
   transition: color 150ms ease;
 }
@@ -977,17 +1134,17 @@ export const PANEL_CSS = `
 
 .panel-color {
   display: flex;
-  height: 36px;
+  height: 24px;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  border-radius: 8px;
-  padding: 0 12px;
+  gap: 8px;
+  border-radius: 4px;
+  padding: 0 8px;
   background: var(--panel-surface);
 }
 .panel-color-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
 }
 .panel-color-right {
@@ -1002,33 +1159,22 @@ export const PANEL_CSS = `
   border: 0;
   outline: 0;
   text-align: right;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 13px;
-  font-weight: 500;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
   text-transform: uppercase;
 }
 .panel-color-swatch {
-  height: 20px;
-  width: 20px;
+  height: 16px;
+  width: 16px;
   flex-shrink: 0;
   border-radius: 4px;
   border: 1px solid var(--panel-swatch-border);
   transition: transform 150ms ease;
 }
 .panel-color-swatch:hover { transform: scale(1.1); }
-/* Sized + positioned over the swatch (not 0x0) so showPicker()/click() has a
-   real anchor rect — pickers anchor to the input's position. */
-.panel-color-native {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  margin-top: -10px;
-  height: 20px;
-  width: 20px;
-  opacity: 0;
-  pointer-events: none;
-}
 
 .panel-path {
   display: flex;
@@ -1041,8 +1187,8 @@ export const PANEL_CSS = `
   justify-content: space-between;
 }
 .panel-path-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
 }
 .panel-path-head-actions {
@@ -1053,14 +1199,14 @@ export const PANEL_CSS = `
 .panel-path-count {
   font-size: 11px;
   color: var(--panel-muted-icon);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
 }
 [data-panel] .panel-path-clear {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--panel-border);
+  border-radius: 4px;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
   cursor: pointer;
@@ -1074,7 +1220,7 @@ export const PANEL_CSS = `
   display: block;
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid var(--panel-border);
   background: var(--panel-surface);
   touch-action: none;
@@ -1153,7 +1299,8 @@ export const PANEL_CSS = `
 .panel-path-point-num {
   fill: var(--panel-label);
   font-size: 3.4px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   text-anchor: middle;
   pointer-events: none;
   user-select: none;
@@ -1168,14 +1315,14 @@ export const PANEL_CSS = `
   gap: 8px;
   font-size: 11px;
   color: var(--panel-text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
 }
 [data-panel] .panel-path-remove {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--panel-border);
+  border-radius: 4px;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
   cursor: pointer;
@@ -1186,7 +1333,7 @@ export const PANEL_CSS = `
   color: var(--panel-action-text-hover);
 }
 .panel-path-hint {
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--panel-muted-icon);
   text-align: center;
 }
@@ -1202,16 +1349,15 @@ export const PANEL_CSS = `
   justify-content: space-between;
 }
 .panel-image-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
 }
 .panel-image-upload {
   font-size: 11px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--panel-border);
+  font-weight: 400;
+  padding: 3px 8px;
+  border-radius: 4px;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
   cursor: pointer;
@@ -1228,7 +1374,7 @@ export const PANEL_CSS = `
   justify-content: center;
   width: 100%;
   min-height: 48px;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid var(--panel-border);
   background: var(--panel-surface);
   overflow: hidden;
@@ -1266,26 +1412,26 @@ export const PANEL_CSS = `
    left edge. */
 [data-panel] .panel-toggle {
   display: flex;
-  height: 36px;
+  height: 24px;
   width: calc(100% + 16px);
   margin: 0 -8px;
   align-items: center;
   justify-content: space-between;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 0 8px;
   background: transparent;
   transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-panel] .panel-toggle:hover { background: var(--panel-toggle-hover); }
 .panel-toggle-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
 }
 .panel-toggle-track {
   position: relative;
-  width: 28px;
-  height: 16px;
+  width: 26px;
+  height: 14px;
   border-radius: 999px;
   background: var(--panel-surface-idle-fill);
   transition: background-color 200ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -1298,8 +1444,8 @@ export const PANEL_CSS = `
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 999px;
   background: var(--panel-bg);
   transition: transform 220ms cubic-bezier(0.34, 1.16, 0.64, 1);
@@ -1311,72 +1457,176 @@ export const PANEL_CSS = `
   transform: translateX(12px);
 }
 
+/* Segmented single-select — optional label, then option buttons sharing a
+   surface track. Selected uses the panel surface tokens, not a heavy fill. */
+.panel-toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 0;
+}
+.panel-toggle-group-label {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--panel-label);
+  line-height: 1.35;
+  padding: 0 2px;
+}
+.panel-toggle-group-track {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 4px;
+  background: var(--panel-surface);
+}
+[data-panel] .panel-toggle-group-btn {
+  display: inline-flex;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 2px;
+  padding: 0 8px;
+  color: var(--panel-text-muted);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.panel-toggle-group-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.panel-toggle-group-icon svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.panel-toggle-group-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+[data-panel] .panel-toggle-group-btn:hover {
+  color: var(--panel-action-text-hover);
+  background: var(--panel-toggle-hover);
+}
+[data-panel] .panel-toggle-group-btn:focus-visible {
+  outline: 1px solid var(--panel-handle);
+  outline-offset: -1px;
+}
+[data-panel] .panel-toggle-group-btn[data-panel-active="true"] {
+  background: var(--panel-surface-active);
+  color: var(--panel-label-active);
+}
+[data-panel] .panel-toggle-group-btn:active { transform: scale(0.98); }
+@media (prefers-reduced-motion: reduce) {
+  [data-panel] .panel-toggle-group-btn { transition: none; }
+  [data-panel] .panel-toggle-group-btn:active { transform: none; }
+}
+
 .panel-select {
   display: flex;
-  min-height: 36px;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  border-radius: 8px;
-  padding: 0 4px 0 12px;
+  gap: 8px;
+  background: transparent;
+}
+.panel-select[data-panel-layout="inline"] {
+  min-height: 24px;
+  height: 24px;
+  border-radius: 4px;
+  padding: 0 8px;
   background: var(--panel-surface);
+  transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-panel] .panel-select[data-panel-layout="inline"]:hover {
+  background: var(--panel-surface-active);
 }
 .panel-select[data-panel-layout="stacked"] {
   flex-direction: column;
   align-items: stretch;
   gap: 6px;
-  padding: 8px 12px;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  background: transparent;
 }
 .panel-select-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
   min-width: 0;
+  line-height: 1.35;
 }
 .panel-select[data-panel-layout="stacked"] .panel-select-label {
   white-space: normal;
-  line-height: 1.35;
 }
 .panel-select[data-panel-layout="inline"] .panel-select-label {
   flex: 1 1 auto;
   white-space: normal;
-  line-height: 1.35;
 }
 [data-panel] .panel-select-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-width: 0;
-  max-width: 168px;
   flex-shrink: 0;
   border: 0;
   outline: 0;
-  background: var(--panel-bg);
+  background: var(--panel-surface);
   color: var(--panel-label);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: normal;
   cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 6px;
+  height: 24px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
+  overflow: visible;
   transition: color 150ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .panel-select[data-panel-layout="stacked"] .panel-select-btn {
   align-self: stretch;
+  width: 100%;
   max-width: none;
   justify-content: space-between;
 }
 .panel-select[data-panel-layout="inline"] .panel-select-btn {
   align-self: center;
+  flex: 1 1 auto;
+  max-width: none;
+  height: 100%;
+  justify-content: flex-end;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
 }
-/* Selected value stays on a single line — truncate rather than wrap. */
+.panel-select[data-panel-layout="inline"] .panel-select-btn:hover,
+.panel-select[data-panel-layout="inline"] .panel-select-btn:focus-visible {
+  background: transparent;
+}
+/* Ellipsis horizontally only — vertical overflow clips descenders in custom fonts. */
 .panel-select-value {
   min-width: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   white-space: nowrap;
   text-overflow: ellipsis;
+  line-height: 1.35;
 }
 [data-panel] .panel-select-btn:hover {
   color: var(--panel-label-active);
@@ -1384,10 +1634,14 @@ export const PANEL_CSS = `
 }
 [data-panel] .panel-select-btn:focus-visible {
   color: var(--panel-label-active);
-  outline: 2px solid var(--panel-handle);
+  background: var(--panel-surface-active);
+  outline: 1px solid var(--panel-handle);
   outline-offset: 1px;
 }
-[data-panel] .panel-select-btn:active { transform: scale(0.98); }
+[data-panel] .panel-select-btn:active { transform: none; }
+.panel-select[data-panel-layout="stacked"] .panel-select-btn:active {
+  transform: none;
+}
 .panel-select-chevron {
   width: 12px;
   height: 12px;
@@ -1404,12 +1658,12 @@ export const PANEL_CSS = `
   pointer-events: auto;
   overflow-y: auto;
   padding: 4px;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.2);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.28), 0 12px 32px rgb(0 0 0 / 0.32);
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-scrollbar-thumb) transparent;
   animation: panel-menu-in 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .panel-select-menu[data-panel-up="true"] {
@@ -1451,13 +1705,16 @@ export const PANEL_CSS = `
   border: 0;
   background: transparent;
   color: var(--panel-label);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11.5px;
-  font-weight: 500;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
   text-align: left;
   white-space: nowrap;
-  padding: 7px 10px;
-  border-radius: 6px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 120ms cubic-bezier(0.22, 1, 0.36, 1),
     color 120ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1470,8 +1727,8 @@ export const PANEL_CSS = `
   color: var(--panel-text);
 }
 .panel-select-check {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
   opacity: 0.9;
 }
@@ -1484,16 +1741,16 @@ export const PANEL_CSS = `
    and wins on source order — the reset sets padding: 0 globally. */
 [data-panel] .panel-prompt-toggle {
   display: flex;
-  height: 36px;
+  height: 24px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 0 12px;
-  border-radius: 8px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   color: var(--panel-label);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   text-align: left;
   transition: color 150ms ease;
 }
@@ -1533,12 +1790,12 @@ export const PANEL_CSS = `
 }
 .panel-prompt-pre {
   margin: 0;
-  padding: 10px 12px 22px;
-  background: var(--panel-bg);
+  padding: 8px 8px 20px;
+  background: var(--panel-surface);
   color: var(--panel-text);
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  border: 0;
+  border-radius: 4px;
+  font-family: inherit;
   font-size: 11px;
   line-height: 1.5;
   white-space: pre-wrap;
@@ -1546,39 +1803,33 @@ export const PANEL_CSS = `
   max-height: 140px;
   overflow-y: auto;
   scrollbar-width: thin;
+  scrollbar-color: var(--panel-scrollbar-thumb) transparent;
   -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 22px), transparent);
   mask-image: linear-gradient(to bottom, black calc(100% - 22px), transparent);
 }
 .panel-prompt-pre::-webkit-scrollbar { width: 6px; }
-.panel-prompt-pre::-webkit-scrollbar-thumb { background: var(--panel-surface-active); border-radius: 999px; }
+.panel-prompt-pre::-webkit-scrollbar-thumb { background: var(--panel-scrollbar-thumb); border-radius: 999px; }
 /* Scoped under [data-panel] to beat the global button reset
    (background: transparent) on specificity — otherwise the button is
-   transparent and the prompt text shows through behind the icon. The text
-   field (--panel-bg) is ~95% opaque, so stack two copies → ~99.8% opaque, same hue. */
+   transparent and the prompt text shows through behind the icon. */
 [data-panel] .panel-prompt-copy {
   position: absolute;
   bottom: 6px;
   right: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    linear-gradient(var(--panel-bg), var(--panel-bg)),
-    linear-gradient(var(--panel-bg), var(--panel-bg));
+  background: var(--panel-bg);
   color: var(--panel-label);
   border: 1px solid var(--panel-border);
   transition: color 150ms ease, transform 200ms cubic-bezier(0.34, 1.16, 0.64, 1);
 }
-.panel-prompt-copy svg { width: 14px; height: 14px; }
+.panel-prompt-copy svg { width: 12px; height: 12px; }
 [data-panel] .panel-prompt-copy:hover {
-  /* Subtle surface tint over the opaque base. */
-  background:
-    linear-gradient(var(--panel-surface), var(--panel-surface)),
-    linear-gradient(var(--panel-bg), var(--panel-bg)),
-    linear-gradient(var(--panel-bg), var(--panel-bg));
+  background: var(--panel-surface-active);
   color: var(--panel-label-active);
   transform: scale(1.05);
 }
@@ -1589,10 +1840,10 @@ export const PANEL_CSS = `
   gap: 6px;
 }
 .panel-vec2-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
-  padding: 0 12px;
+  padding: 0 8px;
 }
 .panel-vec2-row {
   display: grid;
@@ -1605,41 +1856,42 @@ export const PANEL_CSS = `
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 0 12px 2px;
+  padding: 0 0 2px;
 }
 .panel-presets-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
+  padding: 0 8px;
 }
 [data-panel] .panel-preset-select {
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  height: 36px;
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
-  padding: 0 28px 0 12px;
-  font-size: 13px;
-  font-weight: 500;
+  height: 24px;
+  border: 0;
+  border-radius: 4px;
+  padding: 0 24px 0 8px;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1;
   color: var(--panel-label);
   background:
     linear-gradient(45deg, transparent 50%, var(--panel-muted-icon) 50%),
     linear-gradient(135deg, var(--panel-muted-icon) 50%, transparent 50%),
     var(--panel-surface);
-  background-position: calc(100% - 14px) 50%, calc(100% - 10px) 50%, 0 0;
+  background-position: calc(100% - 12px) 50%, calc(100% - 8px) 50%, 0 0;
   background-size: 4px 4px, 4px 4px, auto;
   background-repeat: no-repeat;
   cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 [data-panel] .panel-preset-select:hover {
   color: var(--panel-label-active);
   background-color: var(--panel-surface-active);
 }
 [data-panel] .panel-preset-select:focus-visible {
-  outline: 2px solid var(--panel-handle);
+  outline: 1px solid var(--panel-handle);
   outline-offset: 1px;
 }
 
@@ -1693,13 +1945,10 @@ export const PANEL_CSS = `
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 10px;
-  border: 1px solid var(--panel-border);
+  border-radius: 8px;
   background: var(--panel-bg);
   color: var(--panel-text-muted);
   box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   transition: left 300ms ease, right 300ms ease, background 150ms ease, color 150ms ease;
 }
 .panel-panel-toggle:hover {
@@ -1710,6 +1959,26 @@ export const PANEL_CSS = `
   width: 16px;
   height: 16px;
   transition: transform 300ms ease;
+}
+
+/* ── Canvas overlay projector (OFF-138) ──────────────────────────────────── */
+/* A single layer pinned over the canvas. Click-through by default so it never
+   eats canvas pointer events; individual overlay items opt back in if needed.
+   overflow: visible so items projected near the edges are not clipped. */
+.panel-overlay-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+/* Each projected node. Positioned via transform only (translate → the screen
+   point, then -50%/-50% to center). will-change hints the compositor; no
+   layout-thrashing properties are ever written. */
+.panel-overlay-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
 }
 
 .panel-eye-toggle {
@@ -1724,12 +1993,9 @@ export const PANEL_CSS = `
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   color: var(--panel-text-muted);
   box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   transform: translateX(-50%);
   transition: background 150ms ease, color 500ms ease, opacity 500ms ease;
 }
@@ -1763,16 +2029,16 @@ export const PANEL_CSS = `
 }
 [data-panel] .panel-disclosure-toggle {
   display: flex;
-  height: 36px;
+  height: 24px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 0 12px;
-  border-radius: 8px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   color: var(--panel-label);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   text-align: left;
   transition: color 150ms ease, background-color 150ms ease;
 }
@@ -1801,7 +2067,7 @@ export const PANEL_CSS = `
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 6px 0 14px;
+  padding: 6px 0 12px;
 }
 /* Nested editors — damp hover scale so sliders don't spill past inset padding. */
 [data-panel] .panel-disclosure-body .panel-slider,
@@ -1830,38 +2096,39 @@ export const PANEL_CSS = `
 }
 .panel-collection-header {
   display: flex;
-  height: 36px;
+  height: 24px;
   align-items: center;
   gap: 8px;
 }
 .panel-collection-title {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
-  color: var(--panel-label);
+  letter-spacing: -0.01em;
+  color: var(--panel-text);
 }
 .panel-collection-count {
   display: inline-flex;
-  min-width: 18px;
-  height: 18px;
+  min-width: 16px;
+  height: 16px;
   align-items: center;
   justify-content: center;
   padding: 0 5px;
   border-radius: 999px;
   background: var(--panel-surface);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   color: var(--panel-text-muted);
 }
 [data-panel] .panel-collection-add {
   margin-left: auto;
-  height: 28px;
-  padding: 0 12px;
-  border-radius: 8px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1),
     color 150ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1883,8 +2150,8 @@ export const PANEL_CSS = `
   gap: 6px;
 }
 .panel-collection-empty {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   font-size: 11px;
   color: var(--panel-text-muted);
@@ -1892,7 +2159,7 @@ export const PANEL_CSS = `
 .panel-collection-row {
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  border-radius: 4px;
   transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .panel-collection-row[data-panel-dragging="true"] {
@@ -1903,10 +2170,10 @@ export const PANEL_CSS = `
 }
 .panel-collection-row-head {
   display: flex;
-  height: 36px;
+  height: 24px;
   align-items: center;
   gap: 4px;
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   padding: 0 4px 0 6px;
   transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1918,8 +2185,8 @@ export const PANEL_CSS = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
   color: var(--panel-muted-icon);
   cursor: grab;
@@ -1928,22 +2195,22 @@ export const PANEL_CSS = `
   cursor: grabbing;
 }
 .panel-collection-drag svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 [data-panel] .panel-collection-row-toggle {
   display: flex;
   flex: 1;
   min-width: 0;
-  height: 36px;
+  height: 24px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   padding: 0 4px;
   background: transparent;
   color: var(--panel-label);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   text-align: left;
   transition: color 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -1971,10 +2238,10 @@ export const PANEL_CSS = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  border-radius: 6px;
+  border-radius: 4px;
   background: transparent;
   color: var(--panel-muted-icon);
   transition: color 150ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -1993,14 +2260,14 @@ export const PANEL_CSS = `
   cursor: not-allowed;
 }
 .panel-collection-remove svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
 }
 .panel-collection-row-body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 8px 10px 12px;
+  padding: 6px 8px 10px;
 }
 
 /* ── Reference ───────────────────────────────────────────────────────────── */
@@ -2052,17 +2319,17 @@ export const PANEL_CSS = `
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  min-height: 36px;
-  padding: 0 12px;
-  border-radius: 8px;
+  gap: 8px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
 }
 .panel-text-label,
 .panel-search-label,
 .panel-textarea-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
   padding: 0;
   line-height: 1.35;
@@ -2073,13 +2340,13 @@ export const PANEL_CSS = `
 }
 [data-panel] .panel-text-input {
   width: 100%;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: 8px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   color: var(--panel-label);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1.2;
   transition: background-color 150ms ease, color 150ms ease;
 }
@@ -2098,8 +2365,9 @@ export const PANEL_CSS = `
   background: transparent;
 }
 [data-panel] .panel-text-input[data-panel-mono="true"] {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
 }
 [data-panel] .panel-text-input:focus {
   color: var(--panel-label-active);
@@ -2120,13 +2388,13 @@ export const PANEL_CSS = `
   width: 100%;
   min-height: 72px;
   resize: vertical;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   color: var(--panel-label);
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1.45;
   outline: none;
   transition: background-color 150ms ease, color 150ms ease;
@@ -2152,13 +2420,13 @@ export const PANEL_CSS = `
 [data-panel] .panel-search-input {
   flex: 1;
   min-width: 0;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: 8px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   color: var(--panel-label);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 1.2;
   transition: background-color 150ms ease, color 150ms ease;
 }
@@ -2171,13 +2439,13 @@ export const PANEL_CSS = `
 }
 [data-panel] .panel-search-btn {
   flex-shrink: 0;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: 8px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.01em;
   transition: background-color 150ms ease, color 150ms ease, transform 120ms ease;
 }
@@ -2193,7 +2461,7 @@ export const PANEL_CSS = `
   cursor: not-allowed;
 }
 .panel-search-error {
-  padding: 0 12px;
+  padding: 0 8px;
   font-size: 11px;
   line-height: 1.35;
   color: #ef4444;
@@ -2202,24 +2470,25 @@ export const PANEL_CSS = `
 /* ── Readout row ─────────────────────────────────────────────────────────── */
 .panel-readout {
   display: flex;
-  min-height: 36px;
+  min-height: 24px;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 8px 12px;
-  border-radius: 8px;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
 }
 .panel-readout-label {
   flex-shrink: 0;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--panel-label);
 }
 .panel-readout-value {
   min-width: 0;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
   color: var(--panel-text-muted);
   text-align: right;
   white-space: nowrap;
@@ -2234,10 +2503,10 @@ export const PANEL_CSS = `
   gap: 6px;
 }
 .panel-option-list-title {
-  padding: 0 12px;
+  padding: 0 8px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--panel-text-muted);
 }
@@ -2245,19 +2514,20 @@ export const PANEL_CSS = `
   display: flex;
   max-height: 168px;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   overflow-y: auto;
   padding: 4px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   scrollbar-width: thin;
+  scrollbar-color: var(--panel-scrollbar-thumb) transparent;
 }
 .panel-option-list::-webkit-scrollbar {
   width: 6px;
 }
 .panel-option-list::-webkit-scrollbar-thumb {
-  background: var(--panel-surface-active);
+  background: var(--panel-scrollbar-thumb);
   border-radius: 999px;
 }
 [data-panel] .panel-option-item {
@@ -2266,8 +2536,8 @@ export const PANEL_CSS = `
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 6px 8px;
+  border-radius: 4px;
   background: transparent;
   color: var(--panel-label);
   text-align: left;
@@ -2283,14 +2553,14 @@ export const PANEL_CSS = `
 }
 .panel-option-item-label {
   width: 100%;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   line-height: 1.3;
   color: inherit;
 }
 .panel-option-item-desc {
   width: 100%;
-  font-size: 10.5px;
+  font-size: 11px;
   line-height: 1.35;
   color: var(--panel-text-muted);
   display: -webkit-box;
@@ -2299,8 +2569,8 @@ export const PANEL_CSS = `
   overflow: hidden;
 }
 .panel-option-empty {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
   background: var(--panel-surface);
   font-size: 11px;
   line-height: 1.35;
@@ -2310,7 +2580,7 @@ export const PANEL_CSS = `
 /* ── Hint copy ───────────────────────────────────────────────────────────── */
 .panel-hint {
   margin: 0;
-  padding: 0 12px 2px;
+  padding: 0 8px 2px;
   font-size: 11px;
   line-height: 1.4;
   color: var(--panel-text-muted);
