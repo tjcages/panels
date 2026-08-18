@@ -523,20 +523,16 @@ export function ControlStripeColorsTable({
   }
 
   const addStripe = () => {
-    // ponytail: new stripe clones the last row's shape — consumers wanting
-    // smarter palette picks can transform `value` themselves.
+    // Lab source of truth: insert a new fixed gray row, not a clone of the last stripe.
     const last = value[value.length - 1]
     onChange([
       ...value,
       {
         id: makeStripeId(),
-        hex: last?.hex ?? "#f46021",
-        startFrom: Math.min(
-          STRIPE_START_FROM_MAX,
-          (last?.startFrom ?? 0) + 0.05,
-        ),
+        hex: "#888888",
+        startFrom: 0,
         width: last?.width ?? 4,
-        opacity: last?.opacity ?? 1,
+        opacity: 1,
       },
     ])
   }

@@ -29,6 +29,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Panel spacing** — 1.5x horizontal padding in the body, header aligned so an empty title lets the switcher line up with content, action buttons center their labels with 12px x padding. (OFF-456)
 
 ### Fixed
+- **Add stripe** — inserts a new fixed `#888888` row (`startFrom` 0, opacity 1, width from the last row or 4) instead of cloning the previous stripe. (OFF-455)
 - **Entrance animation on remount** — the float shell's position restore and scale-up entrance were skipped when the panel mounted fresh (the portal renders null pre-mount); effects now wait for the element. (OFF-456)
 - **Panel reskin** — the injected stylesheet now matches the Cloudflare Connect dev panel: opaque `#1c1c1c` dark theme (no backdrop blur), 8px frame radius, 11px single text size, `#2a2a2a` control surfaces, 4px control radius, compact 24px rows, thin scrollbars, bottom fade mask on scrollable bodies. Light theme maps the same geometry to the lab's light palette. Default panel width is now 360px (was 280px). (OFF-455)
 
