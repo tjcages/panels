@@ -1,6 +1,6 @@
 # `usePanel` — API design
 
-Status: **design** (Phase 1, OFF-127). Implementation lands in Phase 2 once the core is decoupled from shaders (OFF-129). This doc is the contract those phases build to.
+Status: **shipped** (Phase 1–2, OFF-127 / OFF-129). `usePanel` is the public API. This doc is the contract it was built to.
 
 ## Goal
 
