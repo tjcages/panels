@@ -33,6 +33,9 @@
     "dist",
     "README.md",
     "SETUP_PROMPT.md",
+    "AGENTS.md",
+    "llms.txt",
+    "skills",
     "LICENSE",
     "CHANGELOG.md"
   ],

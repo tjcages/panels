@@ -1,0 +1,103 @@
+# @tjcages/panels
+
+> Floating React control panel for any live state. One hook (`usePanel`). Compiles out of production. Toggle ⌘⌥D / Ctrl+Alt+D.
+
+Install: `npm install @tjcages/panels`. Install prompt: `SETUP_PROMPT.md`. Full catalog: `AGENTS.md`. Skill: `skills/panels/SKILL.md`.
+
+Do not invent APIs. No `type: "text"` field. Capture fns are still named `registerShader*`.
+
+## usePanel
+
+```ts
+import { usePanel, type PanelField } from "@tjcages/panels"
+const [config, setConfig] = usePanel({
+  id, title, defaults, fields?,  // omit/[] infers from defaults; explicit wins
+  persist?,          // default true
+  scrollTo?,         // CSS selector; header switcher scrolls here
+  onSelect?,         // () => void — TARGET navigation, not collection select
+  autoMount?,        // default true — do not wrap production UI
+})
+```
+
+Also: `side?: "left"|"right"`, `prompts?` (default `[]`), `actionHandlers?`, `onWriteConfig?`, `defaultTheme?`, `defaultOpen?`.
+
+Shaders: `useShaderPanel` from `@tjcages/panels/shader` (same opts, prompt rail on).
+
+## Field types (`PanelField<T>`)
+
+| type | value | when |
+|---|---|---|
+| `section` | — | group; `{ title }`; no key |
+| `slider` | `number` | `{ key, label, min, max, step }` |
+| `color` | hex string | `{ key, label, library?, persist? }` |
+| `toggle` | `boolean` | `{ key, label }` |
+| `toggle-group` | string\|number | segmented `{ key, label, options }` |
+| `select` | string\|number | dropdown `{ key, label, options }` |
+| `vec2` | `[x,y]` | `{ key, label, min, max, step }` |
+| `image` | URL string | never persisted |
+| `path` | `[x,y][]` | `{ key, label, min, max, anchorKey? }` |
+| `gradient-stops` | `GradientStop[]` | `{ key, label, layout?: "field"|"ramp" }` |
+| `stripe-table` | `EditableStripe[]` | `{ key, label, options? }` |
+| `action` | — | `{ actionId, label }` + `actionHandlers` |
+| `presets` | — | `{ presets: [{ label, values? }] }` |
+| `collection` | `Item[]` (`id: string`) | managed list; nest `itemFields` |
+| `reference` | `string` \| `string[]` | `{ key, label, collection, multiple? }` |
+
+## Composition
+
+- Sections group; nest the same union in `itemFields` (array or `(item, i) => fields`).
+- `reference` reads sibling collections from **root** state.
+- Prefer explicit `fields`. Omit/`[]` infers number/hex/boolean/vec2/`{id}[]`; skips nested objects and plain strings.
+- One `usePanel` per target. Switcher appears at 2+. `scrollTo` then `onSelect()`.
+- Do not wrap production UI in `ToolShell`/`PanelRoot`. Import `@tjcages/panels`, not `/dev`.
+- Adapters skip `section`/`action`/`presets`. Do not put collection/reference/image/path/gradient-stops/stripe-table through them.
+
+## Collections
+
+```ts
+{ type: "collection", key, label,
+  itemFields, itemLabel?, newItem?, addLabel?, min?, max?,
+  reorderable?, multiOpen?, migrate? }
+{ type: "reference", key, label, collection, multiple?, optionLabel?, placeholder? }
+```
+
+Open disclosure = selection. `usePanel.onSelect` is target nav, not row select. Two-way bind: `selectPanelCollectionItem(panelId, collectionKey, id)` or `<PanelOverlay panelId collectionKey itemId>`. `Panel.onSelect(collectionKey, id)` exists for manual `<Panel/>` only; auto-mount does not wire it.
+
+## Overlay / drag / clock (OFF-138/139/140 shipped)
+
+`@tjcages/panels`: `createOverlayProjector(binding, { container? })` → `{ register, destroy }`.
+Binding: `project(Vec3)`, `onFrame`, optional `unproject`.
+Clock: `usePanelFrame(({ time, delta }) => { … })` — delta is 0 while paused.
+
+`@tjcages/panels/shader` (inside R3F `<Canvas>`):
+```tsx
+<PanelClock />
+<PanelOverlay anchor={object3D | [x,y,z]} panelId collectionKey itemId>
+  <Pin />
+</PanelOverlay>
+const drag = useDragHandle({ anchor, onDrag, surface? })
+<div {...drag.handleProps} />
+```
+
+## Capture (names as shipped)
+
+From `@tjcages/panels`; `register*` returns unsubscribe:
+
+- `registerShaderCapture(({ maxEdge }) => Promise<Blob>)`
+- `registerShaderGifExport(({ durationSec, fps, maxEdge, onProgress? }) => Promise<Blob>)`
+- `registerShaderVideoExport(() => Promise<{ stop(): Promise<Blob> }>)`
+- `registerShaderRecordCanvas(() => HTMLCanvasElement | null)`
+- `registerShaderRecordPrepare(() => Promise<void>)`
+- `registerShaderRecordFrame(() => void | Promise<void>)`
+
+No registrant → largest page `<canvas>` at screen res.
+
+## Shader adapters (`@tjcages/panels/shader`)
+
+`createWebGLAdapter({ fields, mapping?, prefix?, colorAs?, toggleAs? })`
+`createR3FAdapter({ uniforms, fields, mapping?, prefix? })`
+Also `hexToRgb01`, `patchShaderConfigDefaults`. Stay live in production.
+
+## Production
+
+`production` condition → ~5 KB no-op. `usePanel` returns defaults. Adapters work. Overlay/drag/capture/UI stub. Force UI: `@tjcages/panels/dev`.

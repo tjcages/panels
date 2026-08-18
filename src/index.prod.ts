@@ -55,10 +55,14 @@ export type {
   Vec3,
 } from "./overlay"
 import type { OverlayProjector } from "./overlay"
+import type { PanelCollectionSelection } from "./store"
+import type { UsePanelFrameCallback } from "./hooks/use-panel-frame"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
 export function createOverlayProjector(): OverlayProjector {
   return { register: () => () => {}, destroy: () => {} }
 }
 export type {
+  PanelCollectionSelection,
   PanelRegistration,
   PanelState,
 } from "./store"
@@ -106,6 +110,15 @@ export function getPanelRevision(): number {
   return 0
 }
 export function subscribePanelRegistration(): () => void {
+  return NOOP
+}
+
+const EMPTY_COLLECTION_SELECTION: PanelCollectionSelection = Object.freeze({})
+export const selectPanelCollectionItem = NOOP
+export function getPanelCollectionSelection(): PanelCollectionSelection {
+  return EMPTY_COLLECTION_SELECTION
+}
+export function subscribePanelCollectionSelection(): () => void {
   return NOOP
 }
 
@@ -199,6 +212,25 @@ export function subscribePanelAnimation(): () => void {
 }
 export const initPanelAnimationClock = NOOP
 
+export type { PanelFrameTick, UsePanelFrameCallback } from "./hooks/use-panel-frame"
+export function usePanelFrame(callback: UsePanelFrameCallback): void {
+  const callbackRef = useRef(callback)
+  callbackRef.current = callback
+  useEffect(() => {
+    if (typeof requestAnimationFrame === "undefined") return
+    let previousTime = getPanelAnimationTime()
+    let rafId = 0
+    const loop = (): void => {
+      const tick = advancePanelAnimationDelta(previousTime)
+      previousTime = tick.time
+      callbackRef.current(tick)
+      rafId = requestAnimationFrame(loop)
+    }
+    rafId = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(rafId)
+  }, [])
+}
+
 // Persistence — return defaults, never touch storage.
 export function loadPersistedPanelValues<T>(_id: string, defaults: T): T {
   return { ...(defaults as object) } as T
@@ -229,7 +261,6 @@ export function matchPanelShortcut(): boolean {
 }
 
 // Theme — minimal context, just enough to typecheck.
-import { createContext, useContext, useState } from "react"
 const ThemeContext = createContext<"dark" | "light">("dark")
 export const PanelThemeProvider = ThemeContext.Provider
 export function usePanelTheme(): "dark" | "light" {
@@ -242,6 +273,7 @@ export function usePanelThemeContext(): "dark" | "light" {
 // usePanel — in prod, just local state seeded with the defaults. No panel,
 // no registry, no overlay. The shader runs with its default config.
 export type { UsePanelOptions } from "./hooks/use-panel"
+export { inferPanelFields } from "./infer"
 export function usePanel<T>(options: {
   defaults: T
 }): [T, (next: T) => void] {

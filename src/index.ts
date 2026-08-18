@@ -92,6 +92,10 @@ export {
   setActivePanel,
   subscribePanelRegistration,
   unregisterPanel,
+  getPanelCollectionSelection,
+  selectPanelCollectionItem,
+  subscribePanelCollectionSelection,
+  type PanelCollectionSelection,
   type PanelRegistration,
   type PanelState,
 } from "./store"
@@ -100,6 +104,14 @@ export {
   usePanel,
   type UsePanelOptions,
 } from "./hooks/use-panel"
+
+export { inferPanelFields } from "./infer"
+
+export {
+  usePanelFrame,
+  type PanelFrameTick,
+  type UsePanelFrameCallback,
+} from "./hooks/use-panel-frame"
 
 export {
   getShaderCapture,

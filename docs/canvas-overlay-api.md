@@ -1,6 +1,6 @@
 # Canvas + overlay binding — design
 
-Status: **design** (Phase 4, OFF-138/139/140). Turns Panels from "a control panel next to a canvas" into "a panel *bound* to a canvas": DOM overlays pinned to scene objects, draggable handles that edit item params, selection synced both ways, and one animation clock that actually drives everything. Generalizes region-earth's globe/POI overlay so any canvas tool gets it for free.
+Status: **shipped** (Phase 4, OFF-138/139/140). Turns Panels from "a control panel next to a canvas" into "a panel *bound* to a canvas": DOM overlays pinned to scene objects, draggable handles that edit item params, selection synced both ways, and one animation clock that actually drives everything. Generalizes region-earth's globe/POI overlay so any canvas tool gets it for free.
 
 The core stays renderer-agnostic; a thin **renderer adapter** supplies the two primitives everything else builds on:
 

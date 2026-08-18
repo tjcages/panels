@@ -7,7 +7,7 @@
  * is dropped so the ~2 KB of prompt text never reaches the prod bundle.
  */
 
-import { useState, type CSSProperties, type ReactNode } from "react"
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
 
 // Overlay (OFF-138) — types re-exported from core; the R3F binding no-ops and
 // PanelOverlay renders its children inline (no projection in prod, no three
@@ -18,6 +18,15 @@ export type PanelOverlayProps = {
   anchor: unknown
   visible?: boolean
   children?: ReactNode
+  panelId?: string
+  collectionKey?: string
+  itemId?: string
+  select?: PanelOverlaySelect
+}
+export type PanelOverlaySelect = {
+  panelId: string
+  collectionKey: string
+  itemId: string
 }
 export function PanelOverlay(props: PanelOverlayProps): ReactNode {
   return props.children ?? null
@@ -65,6 +74,39 @@ export function useDragHandle(
     },
     isDragging: () => false,
   }
+}
+
+export type PanelFrameTick = { time: number; delta: number }
+export type UsePanelFrameCallback = (tick: PanelFrameTick) => void
+
+/**
+ * Prod: always-playing rAF ticker (no panel to pause). Mirrors the core
+ * prod clock so shaders that import `usePanelFrame` from this entry still
+ * animate. `<PanelClock />` is a no-op — use `frameloop="always"` in prod.
+ */
+export function usePanelFrame(callback: UsePanelFrameCallback): void {
+  const callbackRef = useRef(callback)
+  callbackRef.current = callback
+  useEffect(() => {
+    if (typeof requestAnimationFrame === "undefined") return
+    let previous = performance.now() / 1000
+    let rafId = 0
+    const loop = (): void => {
+      const time = performance.now() / 1000
+      const raw = time - previous
+      previous = time
+      const delta = Math.min(Math.max(0, raw), 0.1)
+      callbackRef.current({ time, delta })
+      rafId = requestAnimationFrame(loop)
+    }
+    rafId = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(rafId)
+  }, [])
+}
+
+/** No-op in prod — demand-frameloop invalidation is a panel-clock concern. */
+export function PanelClock(): null {
+  return null
 }
 
 // Functional utilities — kept in prod (no UI deps).

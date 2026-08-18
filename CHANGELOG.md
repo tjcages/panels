@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- **`usePanelFrame` / `<PanelClock />`** — per-frame callback driven by the panel clock (delta is 0 while paused); R3F helper invalidates `frameloop="demand"` while playing. Clicking a `PanelOverlay` can open the matching collection row. (OFF-140)
+- **Field inference** — `usePanel({ defaults })` with no `fields` infers sliders, colors, toggles, vec2s, and collections. `inferPanelFields` is exported. (OFF-143, OFF-460)
+- **Agent catalog + skill** — `AGENTS.md` / `llms.txt` primitive catalog, remaining SETUP_PROMPT coverage for collections/overlay/export, and `skills/panels/SKILL.md`. (OFF-144, OFF-145, OFF-146)
 - **Per-target navigation** — a registration can carry `scrollTo` (a selector scrolled into view, reduced-motion aware) and/or `onSelect` (route with your own router); picking a target in the header switcher takes you there. The built-in multi-target switcher now uses the custom `PanelHeaderSelect` dropdown. (OFF-468)
 - **Header hover locks the body** — while the header is hovered in float mode, the panel body ignores pointer events, so reaching to drag can't catch a control. (OFF-466)
 - **`PanelCloseButton`** — the one X/close/remove primitive; header close, stripe/collection row removes, and field clears all render it (md 22px, sm 18px variants). (OFF-459)

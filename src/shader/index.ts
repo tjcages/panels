@@ -29,8 +29,15 @@ export {
   createR3FBinding,
   raycastSurface,
   type PanelOverlayProps,
+  type PanelOverlaySelect,
   type RaycastSurface,
 } from "./overlay"
+export { PanelClock } from "./clock"
+export {
+  usePanelFrame,
+  type PanelFrameTick,
+  type UsePanelFrameCallback,
+} from "../hooks/use-panel-frame"
 export {
   useDragHandle,
   type UseDragHandleOptions,

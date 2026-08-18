@@ -44,6 +44,23 @@ let lastRegisteredId: string | null = null
 const listeners = new Set<() => void>()
 let snapshotRevision = 0
 
+/**
+ * One selected item id per collection, keyed by panel id then collection
+ * field key. Distinct from `PanelRegistration.onSelect` (target navigation).
+ */
+export type PanelCollectionSelection = Readonly<Record<string, string | null>>
+
+const EMPTY_COLLECTION_SELECTION: PanelCollectionSelection = Object.freeze({})
+
+const collectionSelections = new Map<string, Map<string, string | null>>()
+const collectionSelectionListeners = new Set<() => void>()
+/** Per-panel snapshot cache — rebuilt only when THAT panel's selection changes. */
+const collectionSelectionSnapshots = new Map<string, PanelCollectionSelection>()
+
+function notifyCollectionSelection(): void {
+  for (const listener of collectionSelectionListeners) listener()
+}
+
 function registrationSide(reg: PanelRegistration): PanelSide {
   return reg.side ?? "right"
 }
@@ -111,6 +128,10 @@ export function unregisterPanel(id: string): void {
   if (side === "left" && activeLeftId === id) promoteActiveForSide("left")
   if (side === "right" && activeRightId === id) promoteActiveForSide("right")
   notify()
+  collectionSelectionSnapshots.delete(id)
+  if (collectionSelections.delete(id)) {
+    notifyCollectionSelection()
+  }
 }
 
 /** Switch which registered shader the panel shows on the given side. */
@@ -187,5 +208,61 @@ export function subscribePanelRegistration(
   listeners.add(listener)
   return () => {
     listeners.delete(listener)
+  }
+}
+
+/**
+ * Set the selected item for one collection on a panel. `itemId: null` clears.
+ * One selected id per collection — writing a new id replaces the previous.
+ */
+export function selectPanelCollectionItem(
+  panelId: string,
+  collectionKey: string,
+  itemId: string | null,
+): void {
+  let forPanel = collectionSelections.get(panelId)
+  const previous = forPanel?.get(collectionKey) ?? null
+  if (previous === itemId) return
+
+  if (itemId === null) {
+    if (!forPanel) return
+    forPanel.delete(collectionKey)
+    if (forPanel.size === 0) collectionSelections.delete(panelId)
+  } else {
+    if (!forPanel) {
+      forPanel = new Map()
+      collectionSelections.set(panelId, forPanel)
+    }
+    forPanel.set(collectionKey, itemId)
+  }
+  collectionSelectionSnapshots.delete(panelId)
+  notifyCollectionSelection()
+}
+
+/**
+ * Selected item ids for every collection on `panelId`. Missing keys mean
+ * nothing is selected. Snapshot is referentially stable until this panel's
+ * selection changes (safe for `useSyncExternalStore`).
+ */
+export function getPanelCollectionSelection(
+  panelId: string,
+): PanelCollectionSelection {
+  const cached = collectionSelectionSnapshots.get(panelId)
+  if (cached) return cached
+  const forPanel = collectionSelections.get(panelId)
+  const snapshot: PanelCollectionSelection =
+    !forPanel || forPanel.size === 0
+      ? EMPTY_COLLECTION_SELECTION
+      : Object.freeze(Object.fromEntries(forPanel))
+  collectionSelectionSnapshots.set(panelId, snapshot)
+  return snapshot
+}
+
+export function subscribePanelCollectionSelection(
+  listener: () => void,
+): () => void {
+  collectionSelectionListeners.add(listener)
+  return () => {
+    collectionSelectionListeners.delete(listener)
   }
 }

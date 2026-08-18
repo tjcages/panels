@@ -48,6 +48,12 @@ export type RenderFieldContext = {
   actionHandlers?: Record<string, () => void>
   /** Threaded to collections so the panel can surface the selected item id. */
   onCollectionSelect?: (collectionKey: string, id: string | null) => void
+  /**
+   * Selected item id per collection key (from the panel store). Present when
+   * the panel has an `id` — collections become controlled so an overlay click
+   * can open the matching row.
+   */
+  collectionSelection?: Readonly<Record<string, string | null>>
 }
 
 /** A rendered field plus the React key to give it. `null` node = skip. */
@@ -275,6 +281,11 @@ export function renderPanelField(
                 ? (id) => ctx.onCollectionSelect?.(field.key, id)
                 : undefined
             }
+            selectedId={
+              ctx.collectionSelection
+                ? (ctx.collectionSelection[field.key] ?? null)
+                : undefined
+            }
           />
         ),
       }
@@ -382,6 +393,11 @@ export function renderPanelField(
           />,
         ),
       }
+    }
+
+    default: {
+      const _exhaustive: never = field
+      return _exhaustive
     }
   }
 }
