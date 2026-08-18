@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- **`npx @tjcages/panels setup`** — copies the packaged skill into `.agents/skills/panels` and `.cursor/skills/panels`. `--claude` also writes `.claude/skills/panels`. No postinstall. (OFF-155)
 - **`usePanelFrame` / `<PanelClock />`** — per-frame callback driven by the panel clock (delta is 0 while paused); R3F helper invalidates `frameloop="demand"` while playing. Clicking a `PanelOverlay` can open the matching collection row. (OFF-140)
 - **Field inference** — `usePanel({ defaults })` with no `fields` infers sliders, colors, toggles, vec2s, and collections. `inferPanelFields` is exported. (OFF-143, OFF-460)
 - **Agent catalog + skill** — `AGENTS.md` / `llms.txt` primitive catalog, remaining SETUP_PROMPT coverage for collections/overlay/export, and `skills/panels/SKILL.md`. (OFF-144, OFF-145, OFF-146)
