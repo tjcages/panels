@@ -27,6 +27,14 @@ export type PanelRegistration<T extends PanelState = PanelState> = {
   persist?: boolean
   /** Handlers for `type: "action"` fields, keyed by `actionId`. */
   actionHandlers?: Record<string, () => void>
+  /**
+   * Where this target lives, so picking it in the switcher takes you there.
+   * `scrollTo` scrolls a selector into view (reduced-motion aware); `onSelect`
+   * runs anything (route with your own router, focus a canvas, etc.). Both
+   * fire after the target becomes active — `scrollTo` first, then `onSelect`.
+   */
+  scrollTo?: string
+  onSelect?: () => void
 }
 
 const registrations = new Map<string, PanelRegistration>()

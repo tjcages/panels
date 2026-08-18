@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- **Per-target navigation** — a registration can carry `scrollTo` (a selector scrolled into view, reduced-motion aware) and/or `onSelect` (route with your own router); picking a target in the header switcher takes you there. The built-in multi-target switcher now uses the custom `PanelHeaderSelect` dropdown. (OFF-468)
 - **Header hover locks the body** — while the header is hovered in float mode, the panel body ignores pointer events, so reaching to drag can't catch a control. (OFF-466)
 - **`PanelCloseButton`** — the one X/close/remove primitive; header close, stripe/collection row removes, and field clears all render it (md 22px, sm 18px variants). (OFF-459)
 - **`PanelHeaderSelect`** — custom header dropdown: fit-to-text trigger that animates its width to the open menu, full listbox keyboard (wrapping arrows, Home/End, type-ahead, Enter commits, Escape contained), outside-click close. (OFF-457)

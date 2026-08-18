@@ -6,11 +6,13 @@ import { Panel } from "./panel"
 import {
   getActivePanelForSide,
   getActivePanelIdForSide,
+  getPanelRegistrations,
   getPanelRegistrationsForSide,
   getPanelRevision,
   setActivePanel,
   subscribePanelRegistration,
 } from "../store"
+import { PanelHeaderSelect } from "./header-select"
 import { installPanelKeyboard } from "../hooks/keyboard"
 import { useInjectPanelStyles } from "../hooks/use-inject-styles"
 import {
@@ -198,11 +200,7 @@ function RegisteredSidePanel({
 }) {
   const switcher =
     allRegistrations.length > 1 ? (
-      <ShaderSwitcher
-        activeId={activeId}
-        registrations={allRegistrations}
-        onSelect={setActivePanel}
-      />
+      <PanelSwitcher activeId={activeId} registrations={allRegistrations} />
     ) : null
 
   return (
@@ -230,27 +228,47 @@ function RegisteredSidePanel({
   )
 }
 
-function ShaderSwitcher({
+/**
+ * The custom dropdown that switches between registered targets. Selecting a
+ * target makes it active, then takes you to it: its `scrollTo` selector is
+ * scrolled into view (reduced-motion aware) and its `onSelect` runs — so a
+ * multi-target panel navigates to the right section or page on its own.
+ */
+function PanelSwitcher({
   activeId,
   registrations,
-  onSelect,
 }: {
   activeId: string | null
   registrations: ReadonlyArray<{ id: string; title: string }>
-  onSelect: (id: string) => void
 }) {
+  const handleSelect = useCallback((id: string) => {
+    setActivePanel(id)
+    const reg = getPanelRegistrations().get(id)
+    if (!reg) return
+    if (reg.scrollTo && typeof document !== "undefined") {
+      const target = document.querySelector(reg.scrollTo)
+      if (target) {
+        const reduce =
+          typeof window !== "undefined" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        target.scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+          block: "start",
+        })
+      }
+    }
+    reg.onSelect?.()
+  }, [])
+
   return (
-    <select
-      className="panel-switcher"
+    <PanelHeaderSelect
+      ariaLabel="Active panel"
       value={activeId ?? ""}
-      onChange={(e) => onSelect(e.target.value)}
-      aria-label="Active shader"
-    >
-      {registrations.map((reg) => (
-        <option key={reg.id} value={reg.id}>
-          {reg.title}
-        </option>
-      ))}
-    </select>
+      options={registrations.map((reg) => ({
+        value: reg.id,
+        label: reg.title,
+      }))}
+      onChange={handleSelect}
+    />
   )
 }
