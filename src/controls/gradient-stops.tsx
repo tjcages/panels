@@ -807,15 +807,17 @@ export const gradientStopsStyles = `
 button.panel-gradient-action {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   height: 22px;
-  padding: 0 7px;
+  padding: 0 12px;
   border: 0;
   border-radius: 4px;
   background: var(--panel-surface);
   color: var(--panel-text-muted);
   font: inherit;
-  font-size: 10px;
+  font-size: 11px;
+  text-align: center;
   cursor: pointer;
 }
 

@@ -72,10 +72,11 @@ export function FloatingPanel({
   const [mounted, setMounted] = useState(false)
 
   const floating = float && !inline
-  const { panelRef, onHeaderPointerDown, onResizePointerDown } =
+  const { panelRef, headerRef, onHeaderPointerDown, onResizePointerDown } =
     usePanelDragResize({
       enabled: floating,
       collapsed,
+      ready: mounted,
       storageKey: floatStorageKey,
     })
 
@@ -168,6 +169,7 @@ export function FloatingPanel({
           <div
             className="panel-panel-header"
             onPointerDown={floating ? onHeaderPointerDown : undefined}
+            ref={floating ? headerRef : undefined}
           >
             <div className="panel-panel-title-row">
               <span className="panel-panel-title">{title}</span>

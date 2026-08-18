@@ -21,6 +21,10 @@ type SliderState = "idle" | "hover" | "drag"
 const FRICTION = 0.94 // per-frame velocity decay (~60fps)
 const MIN_VELOCITY = 0.00002 // fraction/ms below which the coast stops
 const MAX_VELOCITY = 0.006 // clamp so a fast flick can't fling wildly
+// Momentum only engages on a real throw — an ordinary release stops dead.
+const THROW_VELOCITY = 0.0012 // fraction/ms
+// A pointer that paused this long before release has no live velocity.
+const VELOCITY_STALE_MS = 80
 
 export interface ControlSliderProps {
   label: string
@@ -192,7 +196,7 @@ export function ControlSlider({
         setState((prev) => (prev === "drag" ? "hover" : prev))
       }
 
-      const onUp = () => {
+      const onUp = (upEvent: PointerEvent) => {
         window.removeEventListener("pointermove", onMove)
         window.removeEventListener("pointerup", onUp)
 
@@ -205,15 +209,19 @@ export function ControlSlider({
 
         springBack()
 
-        // Coast: project the tracked velocity forward with exponential decay.
-        // Runs purely on CSS-var paints; commits stepped values as it passes
-        // them and a final clamped value when it comes to rest.
+        // A pause before release means the gesture ended at rest — the last
+        // sampled slope is stale, not a live throw.
+        if (upEvent.timeStamp - lastT > VELOCITY_STALE_MS) velocity = 0
+
+        // Coast only on a real throw: project the tracked velocity forward
+        // with exponential decay. Runs purely on CSS-var paints; commits
+        // stepped values as it passes them and a final clamped value at rest.
         let v = Math.max(-MAX_VELOCITY, Math.min(MAX_VELOCITY, velocity))
         let frac = lastFrac
         let last = performance.now()
 
-        if (Math.abs(v) < MIN_VELOCITY) {
-          // Negligible flick — just commit the resting value.
+        if (Math.abs(v) < THROW_VELOCITY) {
+          // Ordinary release — stop exactly where the pointer left it.
           finishDrag()
           return
         }
@@ -259,6 +267,34 @@ export function ControlSlider({
     }
   }, [])
 
+  // Editable value box, leva-style: free text while focused, committed
+  // (parsed, clamped, stepped) on Enter/blur; Escape reverts; arrows step.
+  const [draft, setDraft] = useState<string | null>(null)
+  const commitDraft = useCallback(
+    (raw: string) => {
+      setDraft(null)
+      const parsed = Number.parseFloat(raw.replace(",", "."))
+      if (!Number.isFinite(parsed)) return
+      const stepped = Math.round(parsed / step) * step
+      onChangeRef.current(
+        Math.max(
+          min,
+          Math.min(max, Number.parseFloat(stepped.toFixed(decimals))),
+        ),
+      )
+    },
+    [min, max, step, decimals],
+  )
+  const stepBy = useCallback(
+    (direction: number, multiplier: number) => {
+      const next = value + direction * step * multiplier
+      onChangeRef.current(
+        Math.max(min, Math.min(max, Number.parseFloat(next.toFixed(decimals)))),
+      )
+    },
+    [value, min, max, step, decimals],
+  )
+
   const discreteSteps = (max - min) / step
   const hashCount = discreteSteps <= 10 ? discreteSteps - 1 : 9
   const hashMarks = Array.from({ length: hashCount }, (_, i) => {
@@ -272,40 +308,77 @@ export function ControlSlider({
   })
 
   return (
-    <div data-panel-state={state} className={cn("panel-slider", className)}>
-      <div ref={overscrollRef} className="panel-slider-overscroll">
-        <div
-          ref={trackRef}
-          role="slider"
-          tabIndex={0}
-          aria-valuenow={value}
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-label={label}
-          className="panel-slider-track"
-          onPointerDown={handlePointerDown}
-          onPointerEnter={() => setState((s) => (s === "drag" ? s : "hover"))}
-          onPointerLeave={() => setState((s) => (s === "drag" ? s : "idle"))}
-        >
-          <div className="panel-slider-hash-row">{hashMarks}</div>
+    <div
+      data-panel-state={state}
+      className={cn("panel-slider-row", className)}
+    >
+      <span className="panel-slider-row-label" title={label}>
+        {label}
+      </span>
+      <div className="panel-slider">
+        <div ref={overscrollRef} className="panel-slider-overscroll">
           <div
-            ref={fillRef}
-            className="panel-slider-fill"
-            style={
-              { "--panel-fill-pct": `${percentage}%` } as React.CSSProperties
-            }
-          />
-          <div
-            ref={handleRef}
-            className="panel-slider-handle"
-            style={
-              { "--panel-handle-left": `${percentage}%` } as React.CSSProperties
-            }
-          />
-          <span className="panel-slider-label">{label}</span>
-          <span className="panel-slider-value">{displayValue}</span>
+            ref={trackRef}
+            role="slider"
+            tabIndex={0}
+            aria-valuenow={value}
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-label={label}
+            className="panel-slider-track"
+            onPointerDown={handlePointerDown}
+            onPointerEnter={() => setState((s) => (s === "drag" ? s : "hover"))}
+            onPointerLeave={() => setState((s) => (s === "drag" ? s : "idle"))}
+          >
+            <div className="panel-slider-hash-row">{hashMarks}</div>
+            <div
+              ref={fillRef}
+              className="panel-slider-fill"
+              style={
+                { "--panel-fill-pct": `${percentage}%` } as React.CSSProperties
+              }
+            />
+            <div
+              ref={handleRef}
+              className="panel-slider-handle"
+              style={
+                {
+                  "--panel-handle-left": `${percentage}%`,
+                } as React.CSSProperties
+              }
+            />
+          </div>
         </div>
       </div>
+      <input
+        className="panel-slider-num"
+        type="text"
+        inputMode="decimal"
+        aria-label={`${label} value`}
+        value={draft ?? displayValue}
+        onFocus={(e) => {
+          setDraft(displayValue)
+          e.currentTarget.select()
+        }}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={(e) => commitDraft(e.target.value)}
+        onKeyDown={(e) => {
+          e.stopPropagation()
+          if (e.key === "Enter") e.currentTarget.blur()
+          else if (e.key === "Escape") {
+            setDraft(null)
+            e.currentTarget.blur()
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault()
+            setDraft(null)
+            stepBy(1, e.shiftKey ? 10 : 1)
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault()
+            setDraft(null)
+            stepBy(-1, e.shiftKey ? 10 : 1)
+          }
+        }}
+      />
     </div>
   )
 }

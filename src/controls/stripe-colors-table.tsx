@@ -762,9 +762,13 @@ export const stripeColorsTableStyles = `
 }
 
 button.panel-stripes-palette-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 44px;
   height: 24px;
-  padding: 0 8px;
+  padding: 0 12px;
+  text-align: center;
   border: 1px solid transparent;
   border-radius: 4px;
   background-color: var(--panel-surface);
