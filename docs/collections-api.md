@@ -1,6 +1,6 @@
 # Collections & references — design
 
-Status: **design** (Phase 3, OFF-133–137). Two new field types turn the panel from "one flat config" into "config + managed lists of items, each editable, that can reference each other." This is the region-earth POI/caption model, made declarative.
+Status: **shipped** (Phase 3, OFF-133–137). Two field types turn the panel from "one flat config" into "config + managed lists of items, each editable, that can reference each other." This is the region-earth POI/caption model, made declarative.
 
 ## The shape
 
