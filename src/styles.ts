@@ -184,8 +184,133 @@ export const PANEL_CSS = `
   filter: blur(0);
   pointer-events: auto;
 }
+
+/* ── Free-float mode ──────────────────────────────────────────────────────
+   The drag hook owns left/top inline; the stylesheet stops animating the
+   frame so gestures never fight a transition. Collapse hides instantly —
+   the hook plays the scale-up entrance when the panel surfaces. */
+.panel-floating[data-panel-float="true"] {
+  bottom: auto;
+  max-height: calc(100dvh - 32px);
+  transition: none;
+}
+.panel-floating[data-panel-float="true"][data-panel-collapsed="true"] {
+  display: none;
+}
+.panel-floating[data-panel-float="true"] .panel-panel-header {
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Invisible resize hit areas, inset so the rounded frame stays clean. */
+.panel-resize {
+  position: absolute;
+  z-index: 1000;
+  touch-action: none;
+}
+.panel-resize-n, .panel-resize-s {
+  right: 12px;
+  left: 12px;
+  height: 5px;
+  cursor: ns-resize;
+}
+.panel-resize-e, .panel-resize-w {
+  top: 12px;
+  bottom: 12px;
+  width: 5px;
+  cursor: ew-resize;
+}
+.panel-resize-n { top: 0; }
+.panel-resize-s { bottom: 0; }
+.panel-resize-e { right: 0; }
+.panel-resize-w { left: 0; }
+.panel-resize-ne, .panel-resize-nw, .panel-resize-se, .panel-resize-sw {
+  width: 12px;
+  height: 12px;
+}
+.panel-resize-ne { top: 0; right: 0; cursor: nesw-resize; }
+.panel-resize-nw { top: 0; left: 0; cursor: nwse-resize; }
+.panel-resize-se { right: 0; bottom: 0; cursor: nwse-resize; }
+.panel-resize-sw { bottom: 0; left: 0; cursor: nesw-resize; }
+
+/* Hovering an edge handle shows a light pill inside that edge. */
+.panel-resize-n::after, .panel-resize-s::after,
+.panel-resize-e::after, .panel-resize-w::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: var(--panel-text-muted);
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.35, 1.55, 0.65, 1);
+}
+.panel-resize-e::after, .panel-resize-w::after {
+  top: 50%;
+  width: 3px;
+  height: 28px;
+  margin-top: -14px;
+}
+.panel-resize-n::after, .panel-resize-s::after {
+  left: 50%;
+  width: 28px;
+  height: 3px;
+  margin-left: -14px;
+}
+.panel-resize-w::after { left: 7px; }
+.panel-resize-e::after { right: 7px; }
+.panel-resize-n::after { top: 7px; }
+.panel-resize-s::after { bottom: 7px; }
+.panel-resize-n:hover::after, .panel-resize-s:hover::after,
+.panel-resize-e:hover::after, .panel-resize-w:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Snap hint: a pill OUTSIDE the panel on the side it will dock to, armed
+   via data-snap-x / data-snap-y while dragging near a viewport edge. */
+.panel-snap-hint {
+  pointer-events: none;
+  position: absolute;
+  z-index: 1001;
+  border-radius: 999px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  opacity: 0;
+  transition:
+    opacity 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.35, 1.55, 0.65, 1);
+}
+.panel-snap-hint-left, .panel-snap-hint-right {
+  top: 50%;
+  width: 4px;
+  height: 28px;
+  transform: translateY(-50%) scale(0.4);
+}
+.panel-snap-hint-top, .panel-snap-hint-bottom {
+  left: 50%;
+  width: 28px;
+  height: 4px;
+  transform: translateX(-50%) scale(0.4);
+}
+.panel-snap-hint-left { left: -9px; }
+.panel-snap-hint-right { right: -9px; }
+.panel-snap-hint-top { top: -9px; }
+.panel-snap-hint-bottom { bottom: -9px; }
+[data-snap-x="left"] .panel-snap-hint-left,
+[data-snap-x="right"] .panel-snap-hint-right {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+[data-snap-y="top"] .panel-snap-hint-top,
+[data-snap-y="bottom"] .panel-snap-hint-bottom {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
 @media (prefers-reduced-motion: reduce) {
   .panel-floating { transition: none; }
+  .panel-resize::after, .panel-snap-hint { transition: none; }
   .panel-floating[data-panel-collapsed="true"]:not([data-panel-peek="true"]) {
     opacity: 0;
     filter: none;

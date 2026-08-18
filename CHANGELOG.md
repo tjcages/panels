@@ -3,6 +3,12 @@
 All notable changes to `shader-panel` are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Free-float mode** — `float` prop on `FloatingPanel`: drag the panel by its header with release momentum, resize from all eight edges and corners, and dock to viewport edges (hint pills preview the dock target). The panel hard-clamps inside a 16px viewport margin, survives page zoom and ancestor transforms via per-gesture screen→style calibration, hides instantly on close, and scales back in from its docked edge. `floatStorageKey` keeps the placement across close/reopen. (OFF-454)
+- **`playground.html`** — standalone browser harness for the built package (`python3 -m http.server` + open).
+
 ## [1.2.0] — 2026-07-08
 
 ### Added
