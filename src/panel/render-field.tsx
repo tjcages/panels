@@ -30,6 +30,7 @@ import type {
   PanelField,
   PanelReferenceField,
 } from "../types"
+import { FieldErrorBoundary } from "./field-error-boundary"
 
 /**
  * Signature the collection uses to render item fields recursively.
@@ -48,6 +49,12 @@ export type RenderFieldContext = {
   actionHandlers?: Record<string, () => void>
   /** Threaded to collections so the panel can surface the selected item id. */
   onCollectionSelect?: (collectionKey: string, id: string | null) => void
+  /**
+   * Selected item id per collection key (from the panel store). Present when
+   * the panel has an `id` — collections become controlled so an overlay click
+   * can open the matching row.
+   */
+  collectionSelection?: Readonly<Record<string, string | null>>
 }
 
 /** A rendered field plus the React key to give it. `null` node = skip. */
@@ -79,6 +86,18 @@ function libraryColorPopover(library?: ColorLibrary): PanelColorPopoverRenderer 
   )
 }
 
+function wrapRenderedField(rendered: RenderedField | null): RenderedField | null {
+  if (rendered == null || rendered.node == null) return rendered
+  return {
+    reactKey: rendered.reactKey,
+    node: (
+      <FieldErrorBoundary fieldKey={rendered.reactKey}>
+        {rendered.node}
+      </FieldErrorBoundary>
+    ),
+  }
+}
+
 /**
  * Render a single non-section field to a node. Extracted so the collection can
  * call it recursively for each item's `itemFields` — every existing control
@@ -87,6 +106,13 @@ function libraryColorPopover(library?: ColorLibrary): PanelColorPopoverRenderer 
  * Sections are handled by the panel's grouping pass, not here.
  */
 export function renderPanelField(
+  field: AnyRenderableField,
+  ctx: RenderFieldContext,
+): RenderedField | null {
+  return wrapRenderedField(renderPanelFieldNode(field, ctx))
+}
+
+function renderPanelFieldNode(
   field: AnyRenderableField,
   ctx: RenderFieldContext,
 ): RenderedField | null {
@@ -275,6 +301,11 @@ export function renderPanelField(
                 ? (id) => ctx.onCollectionSelect?.(field.key, id)
                 : undefined
             }
+            selectedId={
+              ctx.collectionSelection
+                ? (ctx.collectionSelection[field.key] ?? null)
+                : undefined
+            }
           />
         ),
       }
@@ -382,6 +413,11 @@ export function renderPanelField(
           />,
         ),
       }
+    }
+
+    default: {
+      const _exhaustive: never = field
+      return _exhaustive
     }
   }
 }

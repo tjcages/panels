@@ -104,6 +104,10 @@ mount.setUniforms(toUniforms(config))
 
 `createR3FAdapter` does the same for React Three Fiber, mutating `.value` slots in place. `hexToRgb01` and `patchShaderConfigDefaults` are also on the subpath. These stay functional in production builds even though the panel UI does not.
 
+## Recipes
+
+Copy-paste integrations live in [`examples/`](./examples) (shader/WebGL, R3F, map+POIs, dashboard, settings). They are not a running playground.
+
 ## Production
 
 The package resolves to a **~5 KB no-op** under the `production` build condition — `usePanel` still returns your defaults, the shader adapters still work, and nothing else ships. Force the full panel in any environment by importing from `@tjcages/panels/dev`.

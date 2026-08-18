@@ -31,6 +31,11 @@ import {
 } from "three"
 
 import type { ProjectedPoint, RendererBinding, Vec3 } from "../overlay/types"
+import {
+  getPanelCollectionSelection,
+  selectPanelCollectionItem,
+  subscribePanelCollectionSelection,
+} from "../store"
 
 /**
  * A target surface for `unproject` (screen → world raycast). One of:
@@ -220,6 +225,12 @@ export function createR3FBinding(opts: {
   }
 }
 
+export type PanelOverlaySelect = {
+  panelId: string
+  collectionKey: string
+  itemId: string
+}
+
 export type PanelOverlayProps = {
   /** A live scene object (tracks its world matrix) or a static world position. */
   anchor: Object3D | Vec3
@@ -227,6 +238,16 @@ export type PanelOverlayProps = {
   visible?: boolean
   /** Overlay content — portaled into the layer over the canvas. */
   children?: ReactNode
+  /**
+   * Bind this overlay to a collection item. Clicking the overlay selects that
+   * item (opens its row in the panel); panel selection sets
+   * `data-panel-selected` on the overlay node. Alternative: a single `select`.
+   */
+  panelId?: string
+  collectionKey?: string
+  itemId?: string
+  /** Alternate to `panelId` + `collectionKey` + `itemId`. */
+  select?: PanelOverlaySelect
 }
 
 /**
@@ -242,6 +263,10 @@ export function PanelOverlay({
   anchor,
   visible = true,
   children,
+  panelId,
+  collectionKey,
+  itemId,
+  select,
 }: PanelOverlayProps): ReactNode {
   const gl = useThree((s) => s.gl)
   const camera = useThree((s) => s.camera)
@@ -284,6 +309,41 @@ export function PanelOverlay({
     }
   }, [layer, node])
 
+  const boundPanelId = select?.panelId ?? panelId
+  const boundCollectionKey = select?.collectionKey ?? collectionKey
+  const boundItemId = select?.itemId ?? itemId
+
+  // Click → select the bound collection item. `pointer-events: auto` on this
+  // node so the overlay layer (none) still click-throughs around us. Do NOT
+  // setPointerCapture — drag handles (OFF-139) own capture on the handle.
+  useEffect(() => {
+    if (!node || !boundPanelId || !boundCollectionKey || !boundItemId) return
+    node.style.pointerEvents = "auto"
+    const onClick = (): void => {
+      selectPanelCollectionItem(boundPanelId, boundCollectionKey, boundItemId)
+    }
+    node.addEventListener("click", onClick)
+    return () => {
+      node.removeEventListener("click", onClick)
+      node.style.pointerEvents = ""
+    }
+  }, [node, boundPanelId, boundCollectionKey, boundItemId])
+
+  // Panel selection → highlight this overlay (`data-panel-selected`).
+  useEffect(() => {
+    if (!node || !boundPanelId || !boundCollectionKey || !boundItemId) return
+    const sync = (): void => {
+      const selected =
+        getPanelCollectionSelection(boundPanelId)[boundCollectionKey] ?? null
+      node.dataset.panelSelected =
+        selected === boundItemId ? "true" : "false"
+    }
+    sync()
+    return subscribePanelCollectionSelection(sync)
+  }, [node, boundPanelId, boundCollectionKey, boundItemId])
+
+  // Projection stays on R3F `useFrame` (not the panel clock) so a paused
+  // animation clock does not freeze overlay tracking while the camera moves.
   useFrame(() => {
     const el = nodeRef.current
     if (!el) return

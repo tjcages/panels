@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type {
   AnyRenderableField,
   RenderFieldContext,
@@ -40,6 +40,12 @@ export interface ControlCollectionProps {
   renderContext: RenderFieldContext
   /** Fires with the open item's id (or null). Single-open only. */
   onSelect?: (id: string | null) => void
+  /**
+   * Controlled selected / open item id (single-open). `undefined` = uncontrolled
+   * (internal open state). `null` closes. Opening a row still fires `onSelect`;
+   * an external `selectedId` opens that row.
+   */
+  selectedId?: string | null
   className?: string
 }
 
@@ -55,6 +61,7 @@ export function ControlCollection({
   onChange,
   renderContext,
   onSelect,
+  selectedId,
   className,
 }: ControlCollectionProps) {
   const multiOpen = field.multiOpen ?? false
@@ -65,28 +72,55 @@ export function ControlCollection({
     (field.max == null || items.length < field.max)
 
   // Selection / open state. Single-open by default: one id, or null.
-  const [openIds, setOpenIds] = useState<Set<string>>(new Set())
+  // `selectedId !== undefined` is the controlled path (canvas ↔ panel binding).
+  const isControlled = selectedId !== undefined
+  const [internalOpenIds, setOpenIds] = useState<Set<string>>(
+    () => (selectedId ? new Set([selectedId]) : new Set()),
+  )
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [overIndex, setOverIndex] = useState<number | null>(null)
   const liveOnSelect = useRef(onSelect)
   liveOnSelect.current = onSelect
 
+  const openIds =
+    isControlled && !multiOpen
+      ? selectedId
+        ? new Set([selectedId])
+        : new Set<string>()
+      : internalOpenIds
+
+  // Controlled + multiOpen: an external selectedId still opens that row
+  // without closing the others.
+  useEffect(() => {
+    if (!isControlled || !multiOpen) return
+    if (!selectedId) return
+    setOpenIds((prev) => {
+      if (prev.has(selectedId)) return prev
+      const next = new Set(prev)
+      next.add(selectedId)
+      return next
+    })
+  }, [isControlled, multiOpen, selectedId])
+
   const setOpen = useCallback(
     (id: string, open: boolean) => {
-      setOpenIds((prev) => {
-        if (multiOpen) {
+      if (multiOpen) {
+        setOpenIds((prev) => {
           const next = new Set(prev)
           if (open) next.add(id)
           else next.delete(id)
           return next
-        }
-        // Single-open: opening one closes the rest.
-        const next = open ? new Set([id]) : new Set<string>()
-        liveOnSelect.current?.(open ? id : null)
-        return next
-      })
+        })
+        if (open) liveOnSelect.current?.(id)
+        else if (selectedId === id) liveOnSelect.current?.(null)
+        return
+      }
+      liveOnSelect.current?.(open ? id : null)
+      if (!isControlled) {
+        setOpenIds(open ? new Set([id]) : new Set())
+      }
     },
-    [multiOpen],
+    [isControlled, multiOpen, selectedId],
   )
 
   const replaceItem = useCallback(
@@ -156,6 +190,10 @@ export function ControlCollection({
       <div className="panel-collection-items">
         {items.map((item, index) => {
           const open = openIds.has(item.id)
+          const selected =
+            selectedId !== undefined
+              ? selectedId === item.id
+              : open && !multiOpen
           const title = field.itemLabel
             ? field.itemLabel(item, index)
             : `${field.label} ${index + 1}`
@@ -186,6 +224,7 @@ export function ControlCollection({
               key={item.id}
               className="panel-collection-row"
               data-panel-open={open ? "true" : "false"}
+              data-panel-selected={selected ? "true" : "false"}
               data-panel-dragging={dragIndex === index ? "true" : "false"}
               data-panel-dragover={overIndex === index ? "true" : "false"}
               onDragOver={

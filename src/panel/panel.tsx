@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react"
 import { ControlAnimation } from "../controls/animation-controls"
 import { ControlExport } from "../controls/export-controls"
@@ -25,10 +26,17 @@ import {
   persistPanelValues,
 } from "../persist"
 import type { PanelTheme } from "../hooks/use-theme"
+import {
+  getPanelCollectionSelection,
+  selectPanelCollectionItem,
+  subscribePanelCollectionSelection,
+  type PanelCollectionSelection,
+} from "../store"
 import type { PanelField, PanelSide } from "../types"
 
 /** Empty default — the AI-prompt rail is opt-in (shaders use `useShaderPanel`). */
 const EMPTY_PROMPTS: readonly PanelPrompt[] = []
+const EMPTY_COLLECTION_SELECTION: PanelCollectionSelection = Object.freeze({})
 
 export type PanelWriteResult = { ok: boolean; message: string }
 
@@ -113,6 +121,20 @@ export function Panel<T extends Record<string, unknown>>({
   const [pasteError, setPasteError] = useState<string | null>(null)
   const [sectionOpen, setSectionOpen] = useState<Record<string, boolean>>({})
   const pasteTextareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const collectionSelection = useSyncExternalStore(
+    subscribePanelCollectionSelection,
+    () => (id ? getPanelCollectionSelection(id) : EMPTY_COLLECTION_SELECTION),
+    () => EMPTY_COLLECTION_SELECTION,
+  )
+
+  const handleCollectionSelect = useCallback(
+    (collectionKey: string, itemId: string | null) => {
+      if (id) selectPanelCollectionItem(id, collectionKey, itemId)
+      onSelect?.(collectionKey, itemId)
+    },
+    [id, onSelect],
+  )
 
   // Focus + scroll-into-view when the paste sheet opens. Wait until the open
   // transition has progressed (~half the 280ms duration) so the textarea has
@@ -360,7 +382,8 @@ export function Panel<T extends Record<string, unknown>>({
         rootValues,
         setRootValues,
         actionHandlers,
-        onCollectionSelect: onSelect,
+        onCollectionSelect: handleCollectionSelect,
+        collectionSelection: id ? collectionSelection : undefined,
       })
       if (!rendered) continue
 
@@ -376,7 +399,7 @@ export function Panel<T extends Record<string, unknown>>({
     }
 
     return out
-  }, [actionHandlers, fields, onChange, onSelect, values])
+  }, [actionHandlers, collectionSelection, fields, handleCollectionSelect, id, onChange, values])
 
   const resolvedPeek = peek ?? !inline
 

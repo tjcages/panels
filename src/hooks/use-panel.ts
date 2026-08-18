@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { inferPanelFields } from "../infer"
 import { mountPanelOverlay, unmountPanelOverlay } from "../panel/auto-overlay"
 import { loadPersistedPanelValues } from "../persist"
 import {
@@ -9,12 +10,18 @@ import {
   type PanelRegistration,
   type PanelState,
 } from "../store"
+import type { PanelField } from "../types"
 import type { PanelTheme } from "./use-theme"
 
 export type UsePanelOptions<T extends PanelState> = Omit<
   PanelRegistration<T>,
-  "values" | "onChange"
+  "values" | "onChange" | "fields"
 > & {
+  /**
+   * Field schema. Omit or pass `[]` to infer controls from `defaults`
+   * (`inferPanelFields`). An explicit list always wins.
+   */
+  fields?: PanelField<T>[]
   /**
    * Auto-inject the panel into <body> so you don't render <PanelRoot/>
    * yourself. Default `true`. Set `false` if you mount the root manually.
@@ -31,18 +38,16 @@ export type UsePanelOptions<T extends PanelState> = Omit<
 }
 
 /**
- * One-call shader dev panel. Owns the config state, registers with the panel,
- * and (by default) injects the panel UI for you — no `<PanelRoot/>`, no
- * separate files.
+ * One-call panel. Owns the config state, registers with the panel, and (by
+ * default) injects the panel UI for you — no `<PanelRoot/>`, no separate files.
  *
  * ```tsx
  * const [config] = usePanel({
- *   id: "my-shader",
- *   title: "My shader",
+ *   id: "particles",
+ *   title: "Particles",
  *   defaults: DEFAULTS,
- *   fields: FIELDS,
  * })
- * // feed `config` to your shader
+ * // or pass `fields` to override inference
  * ```
  *
  * Returns a `useState`-style tuple so you can also set values yourself (e.g.
@@ -77,6 +82,7 @@ export function usePanel<T extends PanelState>(
     const o = optionsRef.current
     registerPanel<T>({
       ...o,
+      fields: resolvePanelFields(o),
       values,
       onChange: setValues,
     })
@@ -93,4 +99,13 @@ export function usePanel<T extends PanelState>(
   }, [])
 
   return [values, setValues]
+}
+
+function resolvePanelFields<T extends PanelState>(
+  options: UsePanelOptions<T>,
+): PanelField<T>[] {
+  if (options.fields != null && options.fields.length > 0) {
+    return options.fields
+  }
+  return inferPanelFields(options.defaults)
 }

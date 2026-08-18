@@ -5,7 +5,7 @@ import {
   Output,
   canEncodeVideo,
 } from "mediabunny"
-import { getShaderRecordFrame } from "../hooks/capture-registry"
+import { getPanelRecordFrame } from "../hooks/capture-registry"
 
 export type WebCodecsMp4Recorder = {
   stop: () => Promise<Blob>
@@ -46,7 +46,7 @@ export async function canRecordWebCodecsMp4(
 /**
  * Live-record a canvas to H.264 MP4 via WebCodecs + Mediabunny.
  *
- * Before each encode, asks the host (via `registerShaderRecordFrame`) to
+ * Before each encode, asks the host (via `registerPanelRecordFrame`) to
  * paint one composite frame — same sync model as GIF capture. That avoids
  * racing a continuous host rAF against the encoder (washed / dropped frames).
  *
@@ -88,7 +88,7 @@ export async function startWebCodecsMp4Recording(
   const startedAt = performance.now()
 
   const paintHostFrame = async () => {
-    const paint = getShaderRecordFrame()
+    const paint = getPanelRecordFrame()
     if (!paint) return
     await paint()
   }

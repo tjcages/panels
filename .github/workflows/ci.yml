@@ -40,3 +40,7 @@ jobs:
             }
             console.log('Dev/prod exports match:', d.size, 'symbols');
           })"
+      - name: Verify public export snapshot
+        run: node scripts/check-public-exports.mjs
+      - name: Smoke-import the production entry
+        run: node scripts/smoke-prod-entry.mjs

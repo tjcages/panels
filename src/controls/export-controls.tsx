@@ -9,14 +9,14 @@ import {
   type WebCodecsMp4Recorder,
 } from "../lib/webcodecs-mp4-recorder"
 import {
-  getShaderCapture,
-  getShaderGifExport,
-  getShaderRecordCanvas,
-  getShaderRecordFrame,
-  getShaderRecordPrepare,
-  getShaderVideoExport,
-  setShaderRecording,
-  type ShaderVideoSession,
+  getPanelCapture,
+  getPanelGifExport,
+  getPanelRecordCanvas,
+  getPanelRecordFrame,
+  getPanelRecordPrepare,
+  getPanelVideoExport,
+  setPanelRecording,
+  type PanelVideoSession,
 } from "../hooks/capture-registry"
 
 const EXPORT_DPI = 300
@@ -82,12 +82,12 @@ async function withExportDpi(blob: Blob): Promise<Blob> {
 }
 
 /**
- * Export the live shader as a PNG (copy to clipboard / download) or an MP4
- * video recording. The panel has no direct handle on the shader's WebGL
- * canvas, so we locate it heuristically: the largest <canvas> on the page is
- * the full-screen shader surface (color pickers etc. are tiny).
+ * Export the live render surface as a PNG (copy to clipboard / download) or
+ * an MP4 video recording. The panel has no direct handle on the host canvas,
+ * so we locate it heuristically: the largest <canvas> on the page is the
+ * tool's full-screen surface (color pickers etc. are tiny).
  */
-function findShaderCanvas(): HTMLCanvasElement | null {
+function findLargestCanvas(): HTMLCanvasElement | null {
   let best: HTMLCanvasElement | null = null
   let bestArea = 0
   for (const c of Array.from(document.querySelectorAll("canvas"))) {
@@ -103,7 +103,7 @@ function findShaderCanvas(): HTMLCanvasElement | null {
 /**
  * Read the canvas to a PNG blob. Primary path is captureStream + grabFrame,
  * which reads the composited output even when the WebGL context was created
- * WITHOUT preserveDrawingBuffer — so it "just works" on any shader page.
+ * WITHOUT preserveDrawingBuffer — so it "just works" on any tool's canvas.
  * Falls back to toBlob (which needs preserveDrawingBuffer) if the ImageCapture
  * API is unavailable.
  */
@@ -188,7 +188,7 @@ function fileBase(name: string): string {
     name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "") || "shader"
+      .replace(/(^-|-$)/g, "") || "panel"
   const stamp = new Date()
     .toISOString()
     .replace(/[:.]/g, "-")
@@ -211,11 +211,11 @@ async function waitForCompositeReady(): Promise<HTMLCanvasElement | null> {
   return new Promise((resolve) => {
     const started = performance.now()
     const tick = () => {
-      const canvas = getShaderRecordCanvas() ?? findShaderCanvas()
+      const canvas = getPanelRecordCanvas() ?? findLargestCanvas()
       // Prefer the host record canvas once it exists. Pixel content is painted
-      // on demand via registerShaderRecordFrame (WebCodecs) — don't require
+      // on demand via registerPanelRecordFrame (WebCodecs) — don't require
       // a continuous composite loop to have already filled it.
-      if (canvas && (getShaderRecordCanvas() || canvas.width > 2)) {
+      if (canvas && (getPanelRecordCanvas() || canvas.width > 2)) {
         // Give ThemeFog ~2 frames to apply opaque clear after data-recording.
         requestAnimationFrame(() =>
           requestAnimationFrame(() => resolve(canvas)),
@@ -232,7 +232,7 @@ async function waitForCompositeReady(): Promise<HTMLCanvasElement | null> {
   })
 }
 
-export function ControlExport({ name = "shader" }: { name?: string }) {
+export function ControlExport({ name = "panel" }: { name?: string }) {
   const [status, setStatus] = useState<string | null>(null)
   const [recording, setRecording] = useState(false)
   const [elapsed, setElapsed] = useState(0)
@@ -246,7 +246,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
   const [gifResIndex, setGifResIndex] = useState(GIF_DEFAULT_RES_INDEX)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const webCodecsRef = useRef<WebCodecsMp4Recorder | null>(null)
-  const hostVideoRef = useRef<ShaderVideoSession | null>(null)
+  const hostVideoRef = useRef<PanelVideoSession | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const streamRef = useRef<MediaStream | null>(null)
   const timerRef = useRef<number | null>(null)
@@ -265,7 +265,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
   }, [])
 
   const finishUi = useCallback(() => {
-    setShaderRecording(false, { continuous: false })
+    setPanelRecording(false, { continuous: false })
     clearTimer()
     setRecording(false)
     setElapsed(0)
@@ -277,7 +277,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
     try {
       const preset = RES_PRESETS[resIndex]!
       const exportLabel = presetExportLabel(preset)
-      const capture = getShaderCapture()
+      const capture = getPanelCapture()
       if (capture) {
         flash(`Rendering ${exportLabel}…`, 30000)
         const blob = await withExportDpi(
@@ -297,8 +297,8 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
         }
         return
       }
-      const canvas = findShaderCanvas()
-      if (!canvas) return flash("No shader canvas found")
+      const canvas = findLargestCanvas()
+      if (!canvas) return flash("No canvas found")
       const blob = await withExportDpi(await canvasToPngBlob(canvas))
       try {
         await navigator.clipboard.write([
@@ -321,7 +321,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
     try {
       const preset = RES_PRESETS[resIndex]!
       const exportLabel = presetExportLabel(preset)
-      const capture = getShaderCapture()
+      const capture = getPanelCapture()
       if (capture) {
         flash(`Rendering ${exportLabel}…`, 30000)
         const blob = await withExportDpi(
@@ -334,8 +334,8 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
         flash(`PNG saved (${exportLabel}, ${EXPORT_DPI} DPI)`)
         return
       }
-      const canvas = findShaderCanvas()
-      if (!canvas) return flash("No shader canvas found")
+      const canvas = findLargestCanvas()
+      if (!canvas) return flash("No canvas found")
       const blob = await withExportDpi(await canvasToPngBlob(canvas))
       downloadBlob(blob, `${fileBase(name)}-${EXPORT_DPI}dpi.png`)
       flash(`PNG downloaded (${EXPORT_DPI} DPI)`)
@@ -353,12 +353,12 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
         typeof MediaRecorder === "undefined"
       ) {
         flash("Recording not supported here")
-        setShaderRecording(false, { continuous: false })
+        setPanelRecording(false, { continuous: false })
         return
       }
 
       // MediaRecorder needs a continuously updating canvas.
-      setShaderRecording(true, { continuous: true })
+      setPanelRecording(true, { continuous: true })
       const stream = canvas.captureStream(60)
       streamRef.current = stream
       const { mimeType, ext } = pickMediaRecorderFormat()
@@ -435,7 +435,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
       webCodecsRef.current = null
       // Drop recording mode immediately so ThemeFog opaque-clear work
       // stops while we finalize the MP4 (host paints only on demand).
-      setShaderRecording(false, { continuous: false })
+      setPanelRecording(false, { continuous: false })
       clearTimer()
       setRecording(false)
       flash("Encoding MP4…", 60000)
@@ -466,7 +466,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
   const startRecording = useCallback(async () => {
     // Prefer host-owned video (same capture path as GIF/PNG). Panel is
     // just the start/stop button in that case.
-    const hostVideo = getShaderVideoExport()
+    const hostVideo = getPanelVideoExport()
     if (hostVideo) {
       try {
         hostVideoRef.current = await hostVideo()
@@ -485,7 +485,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
       }
     }
 
-    const prepare = getShaderRecordPrepare()
+    const prepare = getPanelRecordPrepare()
     if (prepare) {
       try {
         await prepare()
@@ -495,14 +495,14 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
     }
 
     // Legacy path: panel-owned WebCodecs / MediaRecorder against a host canvas.
-    setShaderRecording(true, { continuous: false })
+    setPanelRecording(true, { continuous: false })
     const canvas = await waitForCompositeReady()
     if (!canvas || canvas.width <= 0 || canvas.height <= 0) {
-      setShaderRecording(false, { continuous: false })
-      return flash("No shader canvas found")
+      setPanelRecording(false, { continuous: false })
+      return flash("No canvas found")
     }
 
-    const paint = getShaderRecordFrame()
+    const paint = getPanelRecordFrame()
     if (paint) await paint()
 
     const useWebCodecs = await canRecordWebCodecsMp4(
@@ -534,7 +534,7 @@ export function ControlExport({ name = "shader" }: { name?: string }) {
   }, [flash, startMediaRecorderFallback])
 
   const exportGif = useCallback(async () => {
-    const gifExport = getShaderGifExport()
+    const gifExport = getPanelGifExport()
     if (!gifExport) {
       return flash("GIF export not available")
     }

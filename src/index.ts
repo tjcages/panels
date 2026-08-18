@@ -92,6 +92,10 @@ export {
   setActivePanel,
   subscribePanelRegistration,
   unregisterPanel,
+  getPanelCollectionSelection,
+  selectPanelCollectionItem,
+  subscribePanelCollectionSelection,
+  type PanelCollectionSelection,
   type PanelRegistration,
   type PanelState,
 } from "./store"
@@ -101,7 +105,36 @@ export {
   type UsePanelOptions,
 } from "./hooks/use-panel"
 
+export { inferPanelFields } from "./infer"
+
 export {
+  compositeCaptureFrame,
+  type CaptureLayer,
+  type CompositeCaptureOptions,
+} from "./capture/composite"
+
+export {
+  usePanelFrame,
+  type PanelFrameTick,
+  type UsePanelFrameCallback,
+} from "./hooks/use-panel-frame"
+
+export {
+  getPanelCapture,
+  getPanelGifExport,
+  getPanelRecordCanvas,
+  getPanelRecordFrame,
+  getPanelRecordPrepare,
+  getPanelVideoExport,
+  registerPanelCapture,
+  registerPanelGifExport,
+  registerPanelRecordCanvas,
+  registerPanelRecordFrame,
+  registerPanelRecordPrepare,
+  registerPanelVideoExport,
+  subscribePanelCapture,
+  subscribePanelRecording,
+  setPanelRecording,
   getShaderCapture,
   getShaderGifExport,
   getShaderRecordCanvas,
@@ -117,6 +150,13 @@ export {
   subscribeShaderCapture,
   subscribeShaderRecording,
   setShaderRecording,
+  type PanelCaptureFn,
+  type PanelGifExportFn,
+  type PanelGifExportOptions,
+  type PanelRecordFrameFn,
+  type PanelRecordingOptions,
+  type PanelVideoExportFn,
+  type PanelVideoSession,
   type ShaderCaptureFn,
   type ShaderGifExportFn,
   type ShaderGifExportOptions,
