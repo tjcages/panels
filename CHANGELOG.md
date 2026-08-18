@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `shader-panel` are documented here.
+All notable changes to `@tjcages/panels` (previously `shader-panel` / `shader-dev`) are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
@@ -16,6 +16,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Field error boundary** — a crashing control shows an inline error row instead of taking down the host. (OFF-462)
 - **Panel shell error boundary** — a throw in animation/export/prompts shows `Panel failed to render` instead of crashing the host. (OFF-462)
 - **Bundle gzip budgets** in CI for core and shader, dev and prod entries. (OFF-462)
+
+## [0.1.1] — 2026-08-18
+
+### Fixed
+- **Add stripe** — inserts a new fixed `#888888` row (`startFrom` 0, opacity 1, width from the last row or 4) instead of cloning the previous stripe. (OFF-455)
+- **Nested section carets** — open-state rotation uses a child selector so a parent folder no longer flips every nested caret. (OFF-455)
+
+## [0.1.0] — 2026-08-18
+
+First release of `@tjcages/panels`. Fresh 0.x line after `shader-panel` 1.2.0. Distinct from the original `shader-dev` 0.1.0 at the bottom of this file.
+
+### Added
+- **`usePanel`** — one hook owns any React state, injects the panel, and returns a `useState`-style tuple. Shaders move to `@tjcages/panels/shader`. (OFF-126–130)
+- **`{ type: "collection" }` / `{ type: "reference" }`** — managed item lists and cross-item links. (OFF-133–137)
+- **Overlay projector + drag handles** — `createOverlayProjector` in core; R3F `PanelOverlay`, `createR3FBinding`, `useDragHandle` on `/shader`. (OFF-138, OFF-139)
 - **Per-target navigation** — a registration can carry `scrollTo` (a selector scrolled into view, reduced-motion aware) and/or `onSelect` (route with your own router); picking a target in the header switcher takes you there. The built-in multi-target switcher now uses the custom `PanelHeaderSelect` dropdown. (OFF-468)
 - **Header hover locks the body** — while the header is hovered in float mode, the panel body ignores pointer events, so reaching to drag can't catch a control. (OFF-466)
 - **`PanelCloseButton`** — the one X/close/remove primitive; header close, stripe/collection row removes, and field clears all render it (md 22px, sm 18px variants). (OFF-459)
@@ -29,6 +44,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **`{ type: "stripe-table" }` field** — controlled stripe palette table: per-row color/opacity/threshold/width, drag reorder, flip, add/remove, optional easing editors (`ControlStripeColorsTable`). (OFF-455)
 - **Color library support** — `library` + `persist` options on color fields (`ControlLibraryColor`), with consumer-injected color data (`ColorLibraryGroup`). (OFF-455)
 - **`renderPanelField`** — exported field renderer for composing custom shells (e.g. the float shell) with schema-driven fields.
+- **`{ type: "toggle-group" }`** — segmented control; theme mode uses it in the header. (OFF-154)
+- Host-owned video export hook, GIF resolution presets, 300 DPI PNG exports.
 
 ### Changed
 - **Header swipe always docks to an edge** — a two-finger swipe now settles against the edge it was thrown toward (a corner when diagonal), never resting mid-page, with a longer idle window so a momentary pause doesn't cut it short. (OFF-466)
@@ -37,16 +54,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Stripe palette header** — Distribution + toolbar on one right-aligned row; the Colors drawer toggle speaks the section-header language. (OFF-457)
 - **Slider momentum requires a throw** — an ordinary release stops exactly where the pointer left it; the coast only engages above a real flick velocity, and a pause before release cancels it. (OFF-456)
 - **Panel spacing** — 1.5x horizontal padding in the body, header aligned so an empty title lets the switcher line up with content, action buttons center their labels with 12px x padding. (OFF-456)
+- Inline-label field layouts and richer slider physics, upstreamed from region-earth. (OFF-131, OFF-132)
 
 ### Fixed
 - **Entrance animation on remount** — the float shell's position restore and scale-up entrance were skipped when the panel mounted fresh (the portal renders null pre-mount); effects now wait for the element. (OFF-456)
 - **Panel reskin** — the injected stylesheet now matches the Cloudflare Connect dev panel: opaque `#1c1c1c` dark theme (no backdrop blur), 8px frame radius, 11px single text size, `#2a2a2a` control surfaces, 4px control radius, compact 24px rows, thin scrollbars, bottom fade mask on scrollable bodies. Light theme maps the same geometry to the lab's light palette. Default panel width is now 360px (was 280px). (OFF-455)
-
-## [0.1.1] — 2026-08-18
-
-### Fixed
-- **Add stripe** — inserts a new fixed `#888888` row (`startFrom` 0, opacity 1, width from the last row or 4) instead of cloning the previous stripe. (OFF-455)
-- **Nested section carets** — open-state rotation uses a child selector so a parent folder no longer flips every nested caret. (OFF-455)
 
 ## [1.2.0] — 2026-07-08
 
@@ -129,13 +141,13 @@ First stable release. API surface is now considered stable; subsequent breaking 
 ### Added
 - **tsup build pipeline** emitting ESM + `.d.ts`. Proper `exports` map, MIT license, repository / keywords / homepage metadata.
 
-## [0.1.0] — Initial
+## [shader-dev 0.1.0] — Initial
 
 - Single-shader registration store, floating panel with slider / color controls, keyboard shortcut, copy/write JSON. Tailwind-class-based styling, `motion` for spring animations.
 
+[0.1.0]: https://www.npmjs.com/package/@tjcages/panels/v/0.1.0
 [1.0.0]: https://github.com/tjcages/shader-panel/releases/tag/v1.0.0
 [0.5.0]: https://github.com/tjcages/shader-panel/releases/tag/v0.5.0
 [0.4.0]: https://github.com/tjcages/shader-panel/releases/tag/v0.4.0
 [0.3.0]: https://github.com/tjcages/shader-panel/releases/tag/v0.3.0
 [0.2.0]: https://github.com/tjcages/shader-panel/releases/tag/v0.2.0
-[0.1.0]: https://github.com/tjcages/shader-panel/releases/tag/v0.1.0
