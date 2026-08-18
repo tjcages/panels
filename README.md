@@ -14,6 +14,8 @@ No CSS framework, no animation library, two peer deps (`react`, `react-dom`), an
 npm install @tjcages/panels
 ```
 
+**Agent setup.** `npx @tjcages/panels setup` copies the skill into `.agents/skills/panels` and `.cursor/skills/panels`. No postinstall.
+
 ## One hook
 
 `usePanel` owns the state, injects the panel, and hands you a `useState`-style tuple. No `<PanelRoot/>`, no extra files.

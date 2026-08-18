@@ -5,7 +5,7 @@ description: Add a live React control panel with usePanel from @tjcages/panels. 
 
 # @tjcages/panels
 
-Drop-in floating panel. One hook owns the state and injects the UI. Compiles out of production. Toggle with ⌘⌥D / Ctrl+Alt+D.
+Drop-in floating panel. One hook owns the state and injects the UI. Compiles out of production. Toggle with ⌘⌥D / Ctrl+Alt+D. The same skill can be installed with `npx @tjcages/panels setup`.
 
 ## Steps
 
