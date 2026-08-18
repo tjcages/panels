@@ -409,7 +409,7 @@ export const PANEL_CSS = `
   justify-content: space-between;
   gap: 8px;
   border-bottom: 1px solid var(--panel-header-border);
-  padding: 8px 8px 4px 16px;
+  padding: 8px 8px 4px 12px;
   font-size: 11px;
 }
 .panel-panel-title-row {
@@ -426,6 +426,10 @@ export const PANEL_CSS = `
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* An empty title collapses so the switcher's inner padding lines its text up
+   with the body content's left edge. */
+.panel-panel-title:empty { display: none; }
+.panel-panel-title:empty + .panel-switcher { margin-left: -8px; }
 .panel-panel-header-end {
   display: flex;
   flex-shrink: 0;
@@ -505,7 +509,7 @@ export const PANEL_CSS = `
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 8px 8px 32px;
+  padding: 8px 12px 32px;
   scrollbar-width: thin;
   scrollbar-color: var(--panel-scrollbar-thumb) transparent;
   /* Content fades out at the bottom while more of it is cut off below
@@ -625,12 +629,17 @@ export const PANEL_CSS = `
 /* Scoped under [data-panel] to beat the global button reset on
    specificity — otherwise the always-on surface fill loses. */
 [data-panel] .panel-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 24px;
+  padding: 0 12px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 400;
   line-height: 1;
+  text-align: center;
   background: var(--panel-action-bg);
   color: var(--panel-action-text);
   transition-property: background-color, color, scale;
@@ -1009,16 +1018,57 @@ export const PANEL_CSS = `
   letter-spacing: 0.01em;
 }
 
+/* Slider row, between the old full-row fill and leva's grid:
+   label | stretchy fill track | editable value box. */
+.panel-slider-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) 52px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.panel-slider-row-label {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--panel-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 150ms ease;
+}
+.panel-slider-row[data-panel-state="hover"] .panel-slider-row-label,
+.panel-slider-row[data-panel-state="drag"] .panel-slider-row-label {
+  color: var(--panel-label-active);
+}
+[data-panel] .panel-slider-num {
+  width: 100%;
+  height: 20px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--panel-surface);
+  color: var(--panel-text);
+  font-family: inherit;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+  transition: background-color 150ms ease;
+}
+[data-panel] .panel-slider-num:hover { background: var(--panel-surface-active); }
+[data-panel] .panel-slider-num:focus {
+  background: var(--panel-surface-active);
+  color: var(--panel-label-active);
+}
 [data-panel] .panel-slider {
   position: relative;
-  height: 24px;
+  height: 18px;
   width: 100%;
   margin: 0;
   overflow: visible;
   transition: transform 220ms cubic-bezier(0.34, 1.16, 0.64, 1);
 }
-[data-panel] .panel-slider[data-panel-state="hover"] { transform: scale(1.01); }
-[data-panel] .panel-slider[data-panel-state="drag"] { transform: scale(1.018); }
+.panel-slider-row[data-panel-state="hover"] .panel-slider { transform: scale(1.01); }
+.panel-slider-row[data-panel-state="drag"] .panel-slider { transform: scale(1.018); }
 
 .panel-slider-overscroll {
   position: absolute;
@@ -1032,6 +1082,7 @@ export const PANEL_CSS = `
 @media (prefers-reduced-motion: reduce) {
   .panel-slider-overscroll[data-panel-release="true"] { transition: none; }
   [data-panel] .panel-slider { transition: none; }
+  [data-panel] .panel-slider-num { transition: none; }
 }
 
 .panel-slider-track {
@@ -1060,8 +1111,8 @@ export const PANEL_CSS = `
   background: transparent;
   transition: background-color 200ms ease;
 }
-.panel-slider[data-panel-state="hover"] .panel-slider-hash,
-.panel-slider[data-panel-state="drag"] .panel-slider-hash { background: var(--panel-hash); }
+.panel-slider-row[data-panel-state="hover"] .panel-slider-hash,
+.panel-slider-row[data-panel-state="drag"] .panel-slider-hash { background: var(--panel-hash); }
 
 .panel-slider-fill {
   position: absolute;
@@ -1073,11 +1124,11 @@ export const PANEL_CSS = `
   background: var(--panel-surface-idle-fill);
   transition: background-color 150ms ease, width 220ms cubic-bezier(0.2, 0, 0, 1);
 }
-.panel-slider[data-panel-state="drag"] .panel-slider-fill {
+.panel-slider-row[data-panel-state="drag"] .panel-slider-fill {
   transition: background-color 150ms ease, width 0ms;
   background: var(--panel-surface-active);
 }
-.panel-slider[data-panel-state="hover"] .panel-slider-fill { background: var(--panel-surface-active); }
+.panel-slider-row[data-panel-state="hover"] .panel-slider-fill { background: var(--panel-surface-active); }
 
 .panel-slider-handle {
   position: absolute;
@@ -1096,8 +1147,8 @@ export const PANEL_CSS = `
     transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
     left 220ms cubic-bezier(0.2, 0, 0, 1);
 }
-.panel-slider[data-panel-state="hover"] .panel-slider-handle { opacity: 0.5; }
-.panel-slider[data-panel-state="drag"] .panel-slider-handle {
+.panel-slider-row[data-panel-state="hover"] .panel-slider-handle { opacity: 0.5; }
+.panel-slider-row[data-panel-state="drag"] .panel-slider-handle {
   opacity: 0.9;
   transform: translate(-1.5px, -50%) scaleY(1.3);
   transition:
@@ -1105,32 +1156,6 @@ export const PANEL_CSS = `
     transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
     left 0ms;
 }
-
-.panel-slider-label {
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--panel-label);
-}
-.panel-slider-value {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-family: inherit;
-  font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--panel-label);
-  transition: color 150ms ease;
-}
-.panel-slider[data-panel-state="hover"] .panel-slider-value,
-.panel-slider[data-panel-state="drag"] .panel-slider-value { color: var(--panel-label-active); }
 
 .panel-color {
   display: flex;

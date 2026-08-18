@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- **Slider value input** — every slider row is now label / stretchy track / editable value box (leva-style): type a value and press Enter, Escape reverts, arrow keys step (shift x10). (OFF-456)
+- **Header swipe throw** — in float mode, a two-finger trackpad swipe while hovering the header moves the panel with the fingers and releases it with the swipe velocity into the same dock/settle as a drag. (OFF-456)
 - **Free-float mode** — `float` prop on `FloatingPanel`: drag the panel by its header with release momentum, resize from all eight edges and corners, and dock to viewport edges (hint pills preview the dock target). The panel hard-clamps inside a 16px viewport margin, survives page zoom and ancestor transforms via per-gesture screen→style calibration, hides instantly on close, and scales back in from its docked edge. `floatStorageKey` keeps the placement across close/reopen. (OFF-454)
 - **`ColorPopover`** — dark color picker popover (Library/Picker tabs, injectable color library, saturation/hue picker, hex input, scroll fade masks, anchor-corner entrance). Replaces the native color input in `ControlColorInput`; no new dependencies. (OFF-455)
 - **`{ type: "gradient-stops" }` field** — 2D field / 1D ramp gradient editor with draggable stops, add/remove, and per-stop popover colors (`ControlGradientStops`). (OFF-455)
@@ -14,6 +16,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **`renderPanelField`** — exported field renderer for composing custom shells (e.g. the float shell) with schema-driven fields.
 
 ### Changed
+- **Slider momentum requires a throw** — an ordinary release stops exactly where the pointer left it; the coast only engages above a real flick velocity, and a pause before release cancels it. (OFF-456)
+- **Panel spacing** — 1.5x horizontal padding in the body, header aligned so an empty title lets the switcher line up with content, action buttons center their labels with 12px x padding. (OFF-456)
+
+### Fixed
+- **Entrance animation on remount** — the float shell's position restore and scale-up entrance were skipped when the panel mounted fresh (the portal renders null pre-mount); effects now wait for the element. (OFF-456)
 - **Panel reskin** — the injected stylesheet now matches the Cloudflare Connect dev panel: opaque `#1c1c1c` dark theme (no backdrop blur), 8px frame radius, 11px single text size, `#2a2a2a` control surfaces, 4px control radius, compact 24px rows, thin scrollbars, bottom fade mask on scrollable bodies. Light theme maps the same geometry to the lab's light palette. Default panel width is now 360px (was 280px). (OFF-455)
 
 ## [1.2.0] — 2026-07-08

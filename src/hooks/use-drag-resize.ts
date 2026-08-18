@@ -176,11 +176,18 @@ const trackPointer = (
 export function usePanelDragResize({
   enabled,
   collapsed,
+  ready = true,
   storageKey,
 }: {
   enabled: boolean
   /** Float mode plays the entrance when this flips to false. */
   collapsed: boolean
+  /**
+   * True once the panel element is actually in the DOM. FloatingPanel renders
+   * null pre-mount, so effects gated only on `enabled` would run against a
+   * null ref and silently skip the position restore and the entrance.
+   */
+  ready?: boolean
   /** sessionStorage key that keeps the placement across close/reopen. */
   storageKey?: string
 }) {
@@ -198,7 +205,7 @@ export function usePanelDragResize({
   }, [persistKey])
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled || !ready) return
     const el = panelRef.current
     if (!el) return
     if (persistKey) {
@@ -236,11 +243,11 @@ export function usePanelDragResize({
       el.style.transition = ""
       persist()
     }
-  }, [enabled, persistKey, persist])
+  }, [enabled, ready, persistKey, persist])
 
   // Entrance: scale up from the docked edge when the panel surfaces.
   useEffect(() => {
-    if (!enabled || collapsed) return
+    if (!enabled || !ready || collapsed) return
     const el = panelRef.current
     if (!el || reducedMotion()) return
     const r = el.getBoundingClientRect()
@@ -264,7 +271,27 @@ export function usePanelDragResize({
       ],
       { duration: 200, easing: "cubic-bezier(0.17, 1, 0.32, 1)" }
     )
-  }, [enabled, collapsed])
+  }, [enabled, ready, collapsed])
+
+  /* Clamp to the viewport, snap to an armed edge, animate there, persist. */
+  const settle = useCallback(
+    (el: HTMLElement, m: Pin, vx: number, vy: number) => {
+      const cur = el.getBoundingClientRect()
+      const maxL = vw() - cur.width - MARGIN
+      const maxT = vh() - cur.height - MARGIN
+      let left = clamp(cur.left + vx * MOMENTUM, MARGIN, maxL)
+      let top = clamp(cur.top + vy * MOMENTUM, MARGIN, maxT)
+      const armed = snapSides(left, top, cur.width, cur.height)
+      if (armed.x === "left") left = MARGIN
+      else if (armed.x === "right") left = Math.max(MARGIN, maxL)
+      if (armed.y === "top") top = MARGIN
+      else if (armed.y === "bottom") top = Math.max(MARGIN, maxT)
+      setHints(el, "", "")
+      animateTo(el, m, left, top)
+      persist()
+    },
+    [persist]
+  )
 
   const onHeaderPointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -305,25 +332,75 @@ export function usePanelDragResize({
           const armed = snapSides(left, top, m.r.width, m.r.height)
           setHints(el, armed.x, armed.y)
         },
-        () => {
-          const cur = el.getBoundingClientRect()
-          const maxL = vw() - cur.width - MARGIN
-          const maxT = vh() - cur.height - MARGIN
-          let left = clamp(cur.left + vx * MOMENTUM, MARGIN, maxL)
-          let top = clamp(cur.top + vy * MOMENTUM, MARGIN, maxT)
-          const armed = snapSides(left, top, cur.width, cur.height)
-          if (armed.x === "left") left = MARGIN
-          else if (armed.x === "right") left = Math.max(MARGIN, maxL)
-          if (armed.y === "top") top = MARGIN
-          else if (armed.y === "bottom") top = Math.max(MARGIN, maxT)
-          setHints(el, "", "")
-          animateTo(el, m, left, top)
-          persist()
-        }
+        () => settle(el, m, vx, vy)
       )
     },
-    [enabled, persist]
+    [enabled, settle]
   )
+
+  // Two-finger swipe while hovering the header throws the panel: wheel deltas
+  // move it live (a grab that tracks the fingers) and the gesture's end
+  // velocity feeds the same settle as a pointer drag. Attached natively
+  // because React registers wheel listeners passively, which would ignore
+  // preventDefault and scroll the page behind the panel.
+  const headerElRef = useRef<HTMLElement | null>(null)
+  const wheelGesture = useRef<{
+    m: Pin
+    vx: number
+    vy: number
+    lastT: number
+    endTimer: number
+  } | null>(null)
+
+  useEffect(() => {
+    const header = headerElRef.current
+    if (!enabled || !ready || !header) return
+    const onWheel = (e: WheelEvent) => {
+      const el = panelRef.current
+      if (!el) return
+      e.preventDefault()
+      const now = performance.now()
+      let g = wheelGesture.current
+      if (!g) {
+        g = { m: pin(el), vx: 0, vy: 0, lastT: now, endTimer: 0 }
+        wheelGesture.current = g
+      }
+      window.clearTimeout(g.endTimer)
+      // Natural trackpad direction: the panel follows the fingers.
+      const dx = -e.deltaX
+      const dy = -e.deltaY
+      const dt = Math.max(1, now - g.lastT)
+      g.vx = 0.8 * (dx / dt) + 0.2 * g.vx
+      g.vy = 0.8 * (dy / dt) + 0.2 * g.vy
+      g.lastT = now
+      const r = el.getBoundingClientRect()
+      const maxL = vw() - r.width - MARGIN
+      const maxT = vh() - r.height - MARGIN
+      const left = clamp(r.left + dx, MARGIN, maxL)
+      const top = clamp(r.top + dy, MARGIN, maxT)
+      el.style.left = `${g.m.toStyleX(left)}px`
+      el.style.top = `${g.m.toStyleY(top)}px`
+      const armed = snapSides(left, top, r.width, r.height)
+      setHints(el, armed.x, armed.y)
+      g.endTimer = window.setTimeout(() => {
+        const gesture = wheelGesture.current
+        wheelGesture.current = null
+        if (gesture) settle(el, gesture.m, gesture.vx, gesture.vy)
+      }, 90)
+    }
+    header.addEventListener("wheel", onWheel, { passive: false })
+    return () => {
+      header.removeEventListener("wheel", onWheel)
+      if (wheelGesture.current) {
+        window.clearTimeout(wheelGesture.current.endTimer)
+        wheelGesture.current = null
+      }
+    }
+  }, [enabled, ready, settle])
+
+  const headerRef = useCallback((node: HTMLElement | null) => {
+    headerElRef.current = node
+  }, [])
 
   const onResizePointerDown = useCallback(
     (e: React.PointerEvent, dir: ResizeDir) => {
@@ -374,5 +451,5 @@ export function usePanelDragResize({
     [enabled, persist]
   )
 
-  return { panelRef, onHeaderPointerDown, onResizePointerDown }
+  return { panelRef, headerRef, onHeaderPointerDown, onResizePointerDown }
 }
