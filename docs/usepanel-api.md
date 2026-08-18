@@ -1,10 +1,10 @@
 # `usePanel` — API design
 
-Status: **design** (Phase 1, OFF-127). Implementation lands in Phase 2 once the core is decoupled from shaders (OFF-129). This doc is the contract those phases build to.
+Status: **shipped** (Phase 1–2, OFF-127 / OFF-129). `usePanel` is the public API. This doc is the contract it was built to.
 
 ## Goal
 
-One general hook. Today's surface is shader-shaped (`useShaderDev`, `ShaderDevValues`, uniform assumptions). Panels replaces it with a single `usePanel` that owns *any* React state. Shaders become one optional adapter, not the center. **Simpler is the bar** — fewer names, one obvious entry point.
+One general hook. `usePanel` owns *any* React state and is the public entry point. Shaders are one optional adapter, not the center. The old shader-shaped surface (`useShaderDev`, `ShaderDevValues`, uniform assumptions) is replaced. **Simpler is the bar** — fewer names, one obvious entry point.
 
 ## Signature
 
