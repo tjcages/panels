@@ -5,6 +5,8 @@ import { Component, type ErrorInfo, type ReactNode } from "react"
 type FieldErrorBoundaryProps = {
   children: ReactNode
   fieldKey: string
+  /** Override the fallback copy. Default: `Control failed ({fieldKey})`. */
+  message?: string
 }
 
 type FieldErrorBoundaryState = {
@@ -49,7 +51,7 @@ export class FieldErrorBoundary extends Component<
       return (
         <div className="panel-field" role="alert">
           <div className="panel-field-description">
-            Control failed ({this.props.fieldKey})
+            {this.props.message ?? `Control failed (${this.props.fieldKey})`}
           </div>
         </div>
       )

@@ -20,7 +20,7 @@ export type PanelRegistration<T extends PanelState = PanelState> = {
    */
   prompts?: ReadonlyArray<PanelPrompt>
   /**
-   * Persist uniform values to `localStorage["shader-dev:<id>"]`. Defaults to
+   * Persist uniform values to `localStorage["panels:<id>"]`. Defaults to
    * `true`. Section expand/collapse is always persisted when `id` is set,
    * even if `persist: false` (so hosts can use their own value storage).
    */

@@ -36,6 +36,10 @@ pnpm build && node scripts/check-public-exports.mjs --write
 
 CI fails if `dist/index.js` disagrees with the snapshot.
 
+## Bundle budgets
+
+After `pnpm build`, `node scripts/check-bundle-size.mjs` checks gzip-9 size of the four entries. Prod is not a pure no-op (adapters, `inferPanelFields`, `compositeCaptureFrame` stay live). Raising a ceiling is a CHANGELOG note in the same PR.
+
 ## Dev / prod parity
 
 The `development` and `production` entries must export the **same names**. CI already checks this. A production no-op stub still has to list every runtime export.

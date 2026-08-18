@@ -1195,9 +1195,12 @@ export const PANEL_CSS = `
   transition: background-color 150ms ease;
 }
 [data-panel] .panel-slider-num:hover { background: var(--panel-surface-active); }
-[data-panel] .panel-slider-num:focus {
+[data-panel] .panel-slider-num:focus,
+[data-panel] .panel-slider-num:focus-visible {
   background: var(--panel-surface-active);
   color: var(--panel-label-active);
+  outline: 1px solid var(--panel-handle);
+  outline-offset: -1px;
 }
 [data-panel] .panel-slider {
   position: relative;
@@ -2741,5 +2744,16 @@ export const PANEL_CSS = `
   font-size: 11px;
   line-height: 1.4;
   color: var(--panel-text-muted);
+}
+
+/* Catch-all: any remaining transition/animation honors reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  [data-panel] *,
+  [data-panel] *::before,
+  [data-panel] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 `

@@ -101,5 +101,6 @@ export function usePanelShortcut(onToggle: () => void, enabled = true) {
 /** Dispatch from layout bridge; persists open state for late-hydrating shader islands. */
 export function dispatchPanelToggle(side: PanelSide = "right"): void {
   writePanelOpenFlag(!readPanelOpenFlag(side), side)
+  if (typeof window === "undefined") return
   window.dispatchEvent(new CustomEvent(PANEL_TOGGLE_EVENT, { detail: { side } }))
 }

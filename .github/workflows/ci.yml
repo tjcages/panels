@@ -44,3 +44,5 @@ jobs:
         run: node scripts/check-public-exports.mjs
       - name: Smoke-import the production entry
         run: node scripts/smoke-prod-entry.mjs
+      - name: Check gzip bundle budgets
+        run: node scripts/check-bundle-size.mjs
