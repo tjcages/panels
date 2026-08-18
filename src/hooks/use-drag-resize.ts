@@ -28,6 +28,9 @@ const MARGIN = 16
 const SNAP_ZONE = 0.05
 const MIN_W = 240
 const MIN_H = 200
+/** Panel cap; a taller viewport centers the panel vertically on first open.
+ *  Keep in sync with the `max-height` on `[data-panel-float="true"]`. */
+const PANEL_MAX_HEIGHT = 664
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)"
 /** How far (ms worth of travel) release velocity carries the panel. */
 const MOMENTUM = 120
@@ -98,7 +101,7 @@ const pin = (el: HTMLElement): Pin => {
   // Viewport caps in calibrated pixels — stylesheet dvh caps do not track
   // page zoom.
   el.style.maxWidth = `${(vw() - 2 * MARGIN) / z}px`
-  el.style.maxHeight = `${(vh() - 2 * MARGIN) / z}px`
+  el.style.maxHeight = `${Math.min(vh() - 2 * MARGIN, PANEL_MAX_HEIGHT) / z}px`
   const probe = el.getBoundingClientRect()
   const toStyleX = (x: number) => (x - probe.left) / z
   const toStyleY = (y: number) => (y - probe.top) / z
@@ -208,13 +211,33 @@ export function usePanelDragResize({
     if (!enabled || !ready) return
     const el = panelRef.current
     if (!el) return
+    let restored = false
     if (persistKey) {
       try {
         const saved = sessionStorage.getItem(persistKey)
-        if (saved) el.setAttribute("style", saved)
+        if (saved) {
+          el.setAttribute("style", saved)
+          restored = true
+        }
       } catch {
         // Ignore unreadable storage.
       }
+    }
+
+    // Fresh open (no saved placement): dock to the right edge. On a viewport
+    // taller than the panel's max height, center it vertically; otherwise sit
+    // at the top-right corner. Written as explicit left/top so drag/resize and
+    // reclamp share one coordinate space.
+    if (!restored) {
+      const m = pin(el)
+      const left = vw() - m.r.width - MARGIN
+      const top =
+        vh() > PANEL_MAX_HEIGHT
+          ? Math.max(MARGIN, Math.round((vh() - m.r.height) / 2))
+          : MARGIN
+      el.style.left = `${m.toStyleX(left)}px`
+      el.style.top = `${m.toStyleY(top)}px`
+      el.style.transition = ""
     }
 
     // Keep the panel fully inside the viewport when the window shrinks.

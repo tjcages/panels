@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- **`PanelCloseButton`** — the one X/close/remove primitive; header close, stripe/collection row removes, and field clears all render it (md 22px, sm 18px variants). (OFF-459)
 - **`PanelHeaderSelect`** — custom header dropdown: fit-to-text trigger that animates its width to the open menu, full listbox keyboard (wrapping arrows, Home/End, type-ahead, Enter commits, Escape contained), outside-click close. (OFF-457)
 - **Color popover keyboard** — arrows walk the library with in-list scrolling, Enter picks, arrows/Tab switch tabs, type-ahead by color name, Escape never leaks to panel handlers. (OFF-457)
 - **Slider value input** — every slider row is now label / stretchy track / editable value box (leva-style): type a value and press Enter, Escape reverts, arrow keys step (shift x10). (OFF-456)
@@ -18,6 +19,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **`renderPanelField`** — exported field renderer for composing custom shells (e.g. the float shell) with schema-driven fields.
 
 ### Changed
+- **Float panel placement** — caps at 664px tall; on a taller viewport it opens vertically centered on the right edge, otherwise top-right. (OFF-458)
 - **Select, toggle-group, and preset rows lay out horizontally** — label left in the shared slider label column, control right. (OFF-457)
 - **Stripe palette header** — Distribution + toolbar on one right-aligned row; the Colors drawer toggle speaks the section-header language. (OFF-457)
 - **Slider momentum requires a throw** — an ordinary release stops exactly where the pointer left it; the coast only engages above a real flick velocity, and a pause before release cancels it. (OFF-456)

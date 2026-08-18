@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { cn } from "../lib/cn"
+import { PanelCloseButton } from "./close-button"
 import {
   cssColorForHex,
   findLibraryColorByHex,
@@ -65,23 +66,6 @@ function GripIcon() {
       <circle cx="15" cy="12" r="1.4" />
       <circle cx="9" cy="18" r="1.4" />
       <circle cx="15" cy="18" r="1.4" />
-    </svg>
-  )
-}
-
-function CloseIcon({ size = 12 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   )
 }
@@ -444,15 +428,13 @@ function StripeDetailRow({
             </div>
           </>
         )}
-        <button
-          type="button"
-          aria-label={`Remove Stripe ${index + 1}`}
+        <PanelCloseButton
+          ariaLabel={`Remove Stripe ${index + 1}`}
           className="panel-stripes-remove"
+          size="sm"
           disabled={disabled}
           onClick={() => onRemove(stripe.id)}
-        >
-          <CloseIcon />
-        </button>
+        />
       </div>
       <div className="panel-stripes-control-stack">
         <ControlSlider
@@ -1024,22 +1006,9 @@ button.panel-stripes-swatch {
   font-size: 10px;
 }
 
-button.panel-stripes-remove {
+/* Layout only — look comes from the shared .panel-close-btn. */
+.panel-stripes-remove {
   justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--panel-muted-icon);
-  cursor: pointer;
-}
-
-button.panel-stripes-remove:not(:disabled):hover {
-  color: var(--panel-danger);
 }
 
 .panel-stripes-control-stack {

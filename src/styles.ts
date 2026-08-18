@@ -208,7 +208,9 @@ export const PANEL_CSS = `
    the hook plays the scale-up entrance when the panel surfaces. */
 .panel-floating[data-panel-float="true"] {
   bottom: auto;
-  max-height: calc(100dvh - 32px);
+  /* Cap the panel; a taller viewport centers it vertically on first open
+     (see PANEL_MAX_HEIGHT in use-drag-resize). */
+  max-height: min(calc(100dvh - 32px), 664px);
   transition: none;
 }
 .panel-floating[data-panel-float="true"][data-panel-collapsed="true"] {
@@ -628,6 +630,10 @@ export const PANEL_CSS = `
   background: var(--panel-surface);
 }
 .panel-close-btn svg { width: 12px; height: 12px; }
+/* Dense-row variant — same treatment, smaller footprint and hit area. */
+.panel-close-btn[data-panel-size="sm"] { width: 18px; height: 18px; }
+.panel-close-btn[data-panel-size="sm"]::before { inset: -4px; }
+.panel-close-btn[data-panel-size="sm"] svg { width: 10px; height: 10px; }
 
 .panel-panel-body {
   min-height: 0;
@@ -2402,34 +2408,9 @@ export const PANEL_CSS = `
 .panel-collection-row[data-panel-open="true"] .panel-collection-caret {
   transform: rotate(180deg);
 }
-[data-panel] .panel-collection-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
+/* Layout only — look comes from the shared .panel-close-btn. */
+.panel-collection-remove {
   flex-shrink: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--panel-muted-icon);
-  transition: color 150ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 150ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-[data-panel] .panel-collection-remove:hover:not(:disabled) {
-  color: var(--panel-danger);
-  background: var(--panel-surface);
-}
-[data-panel] .panel-collection-remove:active:not(:disabled) {
-  transform: scale(0.98);
-}
-[data-panel] .panel-collection-remove:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-.panel-collection-remove svg {
-  width: 12px;
-  height: 12px;
 }
 .panel-collection-row-body {
   display: flex;

@@ -17,6 +17,11 @@ export {
   persistPanelSections,
   persistPanelValues,
 } from "./persist"
+export {
+  PanelCloseButton,
+  PanelCloseIcon,
+  type PanelCloseButtonProps,
+} from "./controls/close-button"
 export { FloatingPanel } from "./panel/floating-panel"
 export {
   PanelHeaderSelect,

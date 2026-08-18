@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react"
 import { cn } from "../lib/cn"
+import { PanelCloseButton } from "./close-button"
 import {
   cssColorForHex,
   findLibraryColorByHex,
@@ -752,14 +753,13 @@ export function ControlLibraryColor({
         onBlur={commitDraft}
       />
       {allowClear && color ? (
-        <button
-          type="button"
+        <PanelCloseButton
           className="panel-gradient-library-clear"
+          ariaLabel="Clear color"
+          size="sm"
           onClick={() => onChange(null)}
           disabled={disabled}
-        >
-          ×
-        </button>
+        />
       ) : null}
     </div>
   )
@@ -1028,7 +1028,7 @@ button.panel-gradient-swatch {
 }
 
 .panel-gradient-library.has-clear {
-  grid-template-columns: 24px minmax(0, 1fr) 22px;
+  grid-template-columns: 24px minmax(0, 1fr) 18px;
 }
 
 .panel-gradient-library-value {
@@ -1064,24 +1064,8 @@ button.panel-gradient-swatch {
   box-shadow: inset 0 0 0 1px var(--panel-text-muted);
 }
 
+/* Layout only — look comes from the shared .panel-close-btn. */
 .panel-gradient-library-clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background-color: transparent;
-  color: var(--panel-text-muted);
-  font-size: 15px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.panel-gradient-library-clear:hover:not(:disabled) {
-  background-color: var(--panel-surface-active);
-  color: var(--panel-text);
+  justify-self: end;
 }
 `

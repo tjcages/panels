@@ -8,6 +8,7 @@ import type {
 } from "../panel/render-field"
 import { renderPanelField } from "../panel/render-field"
 import type { PanelCollectionField, PanelCollectionItem } from "../types"
+import { PanelCloseButton } from "./close-button"
 
 /** Turn a plural-ish label into a singular for the default add button. */
 function singular(label: string): string {
@@ -237,15 +238,13 @@ export function ControlCollection({
                   <CaretIcon />
                 </button>
 
-                <button
-                  type="button"
+                <PanelCloseButton
                   className="panel-collection-remove"
-                  aria-label="Remove"
+                  ariaLabel="Remove"
+                  size="sm"
                   disabled={!canRemove}
                   onClick={() => removeItem(index)}
-                >
-                  <CloseIcon />
-                </button>
+                />
               </div>
 
               <div
@@ -288,22 +287,6 @@ function CaretIcon() {
       aria-hidden="true"
     >
       <path d="M19 9l-7 7-7-7" />
-    </svg>
-  )
-}
-
-function CloseIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   )
 }
