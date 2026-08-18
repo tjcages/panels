@@ -48,3 +48,11 @@ jobs:
         run: node scripts/check-bundle-size.mjs
       - name: Test setup CLI
         run: node scripts/test-setup-cli.mjs
+      - name: Check plugin manifests
+        run: node scripts/check-plugin-manifest.mjs
+      - name: Build playground / docs site
+        env:
+          DOCS_BASE: /tools/panels/docs/
+        run: |
+          pnpm --dir playground install --frozen-lockfile
+          pnpm --dir playground build

@@ -8,6 +8,8 @@ const panelsEntry = fileURLToPath(new URL("../src/index.ts", import.meta.url))
 
 export default defineConfig({
   root: playgroundRoot,
+  // Hosted at https://offbr.co/tools/panels/docs/ — local `pnpm dev` stays `/`.
+  base: process.env.DOCS_BASE || "/",
   plugins: [react()],
   resolve: {
     alias: {

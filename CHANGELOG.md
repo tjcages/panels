@@ -7,7 +7,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 - **`npx @tjcages/panels setup`** — copies the packaged skill into `.agents/skills/panels` and `.cursor/skills/panels`. `--claude` also writes `.claude/skills/panels`. No postinstall. (OFF-155)
-- **In-repo playground** — Vite + React demos under `playground/` (Settings + Dashboard) aliased at the local package. Not the hosted docs site. (OFF-149)
+- **Claude Code marketplace files** — `.claude-plugin/marketplace.json` + `plugin.json` so `/plugin marketplace add tjcages/panels` then `/plugin install panels@tjcages-panels`. (OFF-155)
+- **Cursor plugin manifest** — `.cursor-plugin/plugin.json` + `assets/logo.svg` so the repo is submit-ready at cursor.com/marketplace/publish. Official listing is still owner. (OFF-155)
+- **Agent install brief** — `AGENT.md` ships on npm and is the source for `https://offbr.co/tools/panels/installation`. (OFF-155)
+- **Docs playground** — hash-routed install / fields / collections / overlay / export / theming pages in `playground/`, hosted at [offbr.co/tools/panels/docs](https://offbr.co/tools/panels/docs/). region-earth is not here. (OFF-149)
+- **In-repo playground** — Vite + React demos under `playground/` (Settings + Dashboard) aliased at the local package. (OFF-149)
 - **`usePanelFrame` / `<PanelClock />`** — per-frame callback driven by the panel clock (delta is 0 while paused); R3F helper invalidates `frameloop="demand"` while playing. Clicking a `PanelOverlay` can open the matching collection row. (OFF-140)
 - **Field inference** — `usePanel({ defaults })` with no `fields` infers sliders, colors, toggles, vec2s, and collections. `inferPanelFields` is exported. (OFF-143, OFF-460)
 - **Agent catalog + skill** — `AGENTS.md` / `llms.txt` primitive catalog, remaining SETUP_PROMPT coverage for collections/overlay/export, and `skills/panels/SKILL.md`. (OFF-144, OFF-145, OFF-146)

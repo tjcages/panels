@@ -97,9 +97,18 @@ kbd {
   cursor: pointer;
 }
 
-.tab[aria-pressed="true"] {
+.tab[aria-pressed="true"],
+.tab[aria-current="page"] {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+a.tab {
+  text-decoration: none;
+}
+
+.demo-tabs {
+  margin-left: 8px;
 }
 
 .stage {
@@ -363,4 +372,115 @@ kbd {
   .kpi-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.docs-page {
+  max-width: 760px;
+}
+
+.docs-body {
+  display: grid;
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.docs-body a {
+  color: var(--accent);
+}
+
+.docs-block h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.docs-list {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.docs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.docs-table th,
+.docs-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.docs-table th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+pre {
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #101218;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.fields-preview {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 160px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #101218;
+}
+
+.fields-orb {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--tint, var(--accent));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--tint, var(--accent)) 45%, transparent);
+}
+
+.overlay-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.overlay-stage canvas,
+.export-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay-pin {
+  z-index: 2;
+  padding: 3px 8px;
+  border: 1px solid #ff5e1f;
+  border-radius: 999px;
+  background: #1c1c1c;
+  color: #ededed;
+  font-size: 11px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.theme-swatches {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-swatches span {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }

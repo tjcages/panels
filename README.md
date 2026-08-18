@@ -14,7 +14,9 @@ No CSS framework, no animation library, two peer deps (`react`, `react-dom`), an
 npm install @tjcages/panels
 ```
 
-**Agent setup.** `npx @tjcages/panels setup` copies the skill into `.agents/skills/panels` and `.cursor/skills/panels`. No postinstall.
+**Agent setup.** `npx @tjcages/panels setup` copies the skill into `.agents/skills/panels` and `.cursor/skills/panels`. No postinstall. Claude Code: `/plugin marketplace add tjcages/panels` then `/plugin install panels@tjcages-panels`. Cursor: `.cursor-plugin/plugin.json` in this repo — submit at [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish). Also: `npx skills add tjcages/panels --skill panels`.
+
+Live docs + playground: [offbr.co/tools/panels/docs](https://offbr.co/tools/panels/docs/). Package card: [offbr.co/tools/panels](https://offbr.co/tools/panels). Agent install brief: [offbr.co/tools/panels/installation](https://offbr.co/tools/panels/installation). Local: [`playground/`](./playground).
 
 ## One hook
 
