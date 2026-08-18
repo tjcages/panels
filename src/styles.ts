@@ -220,6 +220,14 @@ export const PANEL_CSS = `
   cursor: grab;
   touch-action: none;
 }
+/* While the header is hovered (a drag/swipe is imminent), the body goes inert
+   so reaching for the header can't land on a control. Releases the moment the
+   pointer leaves the header. */
+.panel-floating[data-panel-float="true"]
+  .panel-panel-header:hover
+  + .panel-panel-body {
+  pointer-events: none;
+}
 
 /* Invisible resize hit areas, inset so the rounded frame stays clean. */
 .panel-resize {

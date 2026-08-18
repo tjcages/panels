@@ -316,6 +316,41 @@ export function usePanelDragResize({
     [persist]
   )
 
+  /*
+   * Swipe release: always come to rest against an edge, never mid-page. The
+   * dominant swipe axis docks to the edge it was thrown toward; the other axis
+   * docks too only if the throw left the panel already near that edge (so a
+   * horizontal flick keeps its height — a single edge — while a diagonal one
+   * lands in a corner — two edges).
+   */
+  const dockToEdges = useCallback(
+    (el: HTMLElement, m: Pin, vx: number, vy: number) => {
+      const cur = el.getBoundingClientRect()
+      const maxL = vw() - cur.width - MARGIN
+      const maxT = vh() - cur.height - MARGIN
+      let left = clamp(cur.left + vx * MOMENTUM, MARGIN, maxL)
+      let top = clamp(cur.top + vy * MOMENTUM, MARGIN, maxT)
+      const horizontal = Math.abs(vx) >= Math.abs(vy)
+      const toLeft = vx !== 0 ? vx < 0 : left + cur.width / 2 < vw() / 2
+      const toTop = vy !== 0 ? vy < 0 : top + cur.height / 2 < vh() / 2
+      const xEdge = toLeft ? MARGIN : Math.max(MARGIN, maxL)
+      const yEdge = toTop ? MARGIN : Math.max(MARGIN, maxT)
+      const nearX = Math.min(left - MARGIN, maxL - left) < vw() * SNAP_ZONE
+      const nearY = Math.min(top - MARGIN, maxT - top) < vh() * SNAP_ZONE
+      if (horizontal) {
+        left = xEdge
+        if (nearY) top = yEdge
+      } else {
+        top = yEdge
+        if (nearX) left = xEdge
+      }
+      setHints(el, "", "")
+      animateTo(el, m, left, top)
+      persist()
+    },
+    [persist]
+  )
+
   const onHeaderPointerDown = useCallback(
     (e: React.PointerEvent) => {
       const el = panelRef.current
@@ -405,11 +440,13 @@ export function usePanelDragResize({
       el.style.top = `${g.m.toStyleY(top)}px`
       const armed = snapSides(left, top, r.width, r.height)
       setHints(el, armed.x, armed.y)
+      // A touch longer than the drag idle so a momentary trackpad pause
+      // mid-swipe doesn't cut the gesture short and dock early.
       g.endTimer = window.setTimeout(() => {
         const gesture = wheelGesture.current
         wheelGesture.current = null
-        if (gesture) settle(el, gesture.m, gesture.vx, gesture.vy)
-      }, 90)
+        if (gesture) dockToEdges(el, gesture.m, gesture.vx, gesture.vy)
+      }, 110)
     }
     header.addEventListener("wheel", onWheel, { passive: false })
     return () => {
@@ -419,7 +456,7 @@ export function usePanelDragResize({
         wheelGesture.current = null
       }
     }
-  }, [enabled, ready, settle])
+  }, [enabled, ready, dockToEdges])
 
   const headerRef = useCallback((node: HTMLElement | null) => {
     headerElRef.current = node
