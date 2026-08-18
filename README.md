@@ -5,7 +5,7 @@
 A floating panel for tweaking shader uniforms live — sliders, color pickers, copy/paste JSON. Works with any **WebGL**, **Three.js**, or **React Three Fiber** shader.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tjcages/shader-panel/main/assets/hero.webp" alt="shader-panel open over a WebGL shader" width="720">
+  <img src="https://raw.githubusercontent.com/tjcages/panels/main/assets/hero.webp" alt="Panels — a floating dev panel open over a shader" width="720">
 </p>
 
 No CSS framework, no animation library, two peer deps (`react`, `react-dom`), and it compiles out of production builds (~5 KB no-op). Toggle with <kbd>⌘⌥D</kbd>.
