@@ -30,6 +30,7 @@ import type {
   PanelField,
   PanelReferenceField,
 } from "../types"
+import { FieldErrorBoundary } from "./field-error-boundary"
 
 /**
  * Signature the collection uses to render item fields recursively.
@@ -85,6 +86,18 @@ function libraryColorPopover(library?: ColorLibrary): PanelColorPopoverRenderer 
   )
 }
 
+function wrapRenderedField(rendered: RenderedField | null): RenderedField | null {
+  if (rendered == null || rendered.node == null) return rendered
+  return {
+    reactKey: rendered.reactKey,
+    node: (
+      <FieldErrorBoundary fieldKey={rendered.reactKey}>
+        {rendered.node}
+      </FieldErrorBoundary>
+    ),
+  }
+}
+
 /**
  * Render a single non-section field to a node. Extracted so the collection can
  * call it recursively for each item's `itemFields` — every existing control
@@ -93,6 +106,13 @@ function libraryColorPopover(library?: ColorLibrary): PanelColorPopoverRenderer 
  * Sections are handled by the panel's grouping pass, not here.
  */
 export function renderPanelField(
+  field: AnyRenderableField,
+  ctx: RenderFieldContext,
+): RenderedField | null {
+  return wrapRenderedField(renderPanelFieldNode(field, ctx))
+}
+
+function renderPanelFieldNode(
   field: AnyRenderableField,
   ctx: RenderFieldContext,
 ): RenderedField | null {

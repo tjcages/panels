@@ -12,6 +12,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Generic capture registry** — `registerPanelCapture` and siblings are the canonical names; `registerShader*` aliases stay (same function). Export UI looks for any canvas. (OFF-142)
 - **`compositeCaptureFrame`** — draw canvas / ImageBitmap layers into one PNG for overlay+canvas export. (OFF-141)
 - **Recipe examples** — copyable integrations in `examples/` (shader, R3F, map+POIs, dashboard, settings). (OFF-147)
+- **Public export snapshot** — `api-exports.txt` + `scripts/check-public-exports.mjs`; 0.x semver policy in CONTRIBUTING. (OFF-461)
+- **Field error boundary** — a crashing control shows an inline error row instead of taking down the host. (OFF-462)
 - **Per-target navigation** — a registration can carry `scrollTo` (a selector scrolled into view, reduced-motion aware) and/or `onSelect` (route with your own router); picking a target in the header switcher takes you there. The built-in multi-target switcher now uses the custom `PanelHeaderSelect` dropdown. (OFF-468)
 - **Header hover locks the body** — while the header is hovered in float mode, the panel body ignores pointer events, so reaching to drag can't catch a control. (OFF-466)
 - **`PanelCloseButton`** — the one X/close/remove primitive; header close, stripe/collection row removes, and field clears all render it (md 22px, sm 18px variants). (OFF-459)
