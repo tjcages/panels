@@ -1,6 +1,6 @@
 # Recipes
 
-Copy these into the **host app**. This folder is not compiled — it is not a playground, not in the package build, and not a running example gallery (that is a separate docs-site track).
+Copy these into the **host app**. This folder is not compiled and is not in the package build. Runnable Settings + Dashboard demos live in [`playground/`](../playground). A hosted gallery is still a separate docs-site track.
 
 Each recipe is a minimal integration: files an agent would edit, plus one complete TSX snippet. Paste into the component that owns the values. Do not wrap production UI in `ToolShell` / `PanelRoot`.
 
