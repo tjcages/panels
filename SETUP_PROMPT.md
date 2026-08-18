@@ -123,16 +123,17 @@ Add @tjcages/panels to my open file so I can tune its values live.
      production still compiles (overlay no-ops).
 
 10. ONLY IF the host must supply hi-res stills / GIF / video the panel
-    export footer can drive. Names are still shader-prefixed — use them
-    as exported. From "@tjcages/panels", in a useEffect, register and
-    return the unsubscribe:
-      registerShaderCapture(({ maxEdge }) => Promise<Blob>)
-      registerShaderGifExport(({ durationSec, fps, maxEdge, onProgress }) =>
+    export footer can drive. Prefer registerPanel* names (registerShader*
+    aliases still work). From "@tjcages/panels", in a useEffect, register
+    and return the unsubscribe:
+      registerPanelCapture(({ maxEdge }) => Promise<Blob>)
+      registerPanelGifExport(({ durationSec, fps, maxEdge, onProgress }) =>
         Promise<Blob>)
-      registerShaderVideoExport(() => Promise<{ stop: () => Promise<Blob> }>)
-      registerShaderRecordCanvas(() => HTMLCanvasElement | null)
-      registerShaderRecordPrepare(() => Promise<void>)
-      registerShaderRecordFrame(() => void | Promise<void>)
+      registerPanelVideoExport(() => Promise<{ stop: () => Promise<Blob> }>)
+      registerPanelRecordCanvas(() => HTMLCanvasElement | null)
+      registerPanelRecordPrepare(() => Promise<void>)
+      registerPanelRecordFrame(() => void | Promise<void>)
+    Composite canvas + overlay: compositeCaptureFrame({ layers, maxEdge? }).
     If nothing is registered, the panel falls back to the largest
     <canvas> on the page at screen resolution. Unregister on unmount.
     Verify: PNG download works; if you registered capture, it is used

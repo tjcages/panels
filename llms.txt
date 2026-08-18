@@ -4,7 +4,7 @@
 
 Install: `npm install @tjcages/panels`. Install prompt: `SETUP_PROMPT.md`. Full catalog: `AGENTS.md`. Skill: `skills/panels/SKILL.md`.
 
-Do not invent APIs. No `type: "text"` field. Capture fns are still named `registerShader*`.
+Do not invent APIs. No `type: "text"` field. Prefer `registerPanel*` capture names; `registerShader*` aliases remain.
 
 ## usePanel
 
@@ -79,16 +79,17 @@ const drag = useDragHandle({ anchor, onDrag, surface? })
 <div {...drag.handleProps} />
 ```
 
-## Capture (names as shipped)
+## Capture
 
-From `@tjcages/panels`; `register*` returns unsubscribe:
+From `@tjcages/panels`; `register*` returns unsubscribe. Prefer `registerPanel*` (`registerShader*` aliases remain):
 
-- `registerShaderCapture(({ maxEdge }) => Promise<Blob>)`
-- `registerShaderGifExport(({ durationSec, fps, maxEdge, onProgress? }) => Promise<Blob>)`
-- `registerShaderVideoExport(() => Promise<{ stop(): Promise<Blob> }>)`
-- `registerShaderRecordCanvas(() => HTMLCanvasElement | null)`
-- `registerShaderRecordPrepare(() => Promise<void>)`
-- `registerShaderRecordFrame(() => void | Promise<void>)`
+- `registerPanelCapture(({ maxEdge }) => Promise<Blob>)`
+- `registerPanelGifExport(({ durationSec, fps, maxEdge, onProgress? }) => Promise<Blob>)`
+- `registerPanelVideoExport(() => Promise<{ stop(): Promise<Blob> }>)`
+- `registerPanelRecordCanvas(() => HTMLCanvasElement | null)`
+- `registerPanelRecordPrepare(() => Promise<void>)`
+- `registerPanelRecordFrame(() => void | Promise<void>)`
+- `compositeCaptureFrame({ layers, maxEdge? })` — canvas/ImageBitmap layers, bottom→top
 
 No registrant → largest page `<canvas>` at screen res.
 

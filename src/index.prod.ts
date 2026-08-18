@@ -124,6 +124,13 @@ export function subscribePanelCollectionSelection(): () => void {
 
 // Capture registry — no-op in prod (no export panel to drive it).
 export type {
+  PanelCaptureFn,
+  PanelGifExportFn,
+  PanelGifExportOptions,
+  PanelRecordFrameFn,
+  PanelRecordingOptions,
+  PanelVideoExportFn,
+  PanelVideoSession,
   ShaderCaptureFn,
   ShaderGifExportFn,
   ShaderGifExportOptions,
@@ -132,49 +139,79 @@ export type {
   ShaderVideoExportFn,
   ShaderVideoSession,
 } from "./hooks/capture-registry"
-export function registerShaderCapture(): () => void {
+export function registerPanelCapture(): () => void {
   return NOOP
 }
-export function getShaderCapture(): null {
+/** @deprecated Use registerPanelCapture */
+export const registerShaderCapture = registerPanelCapture
+export function getPanelCapture(): null {
   return null
 }
-export function subscribeShaderCapture(): () => void {
+/** @deprecated Use getPanelCapture */
+export const getShaderCapture = getPanelCapture
+export function subscribePanelCapture(): () => void {
   return NOOP
 }
-export function registerShaderRecordCanvas(): () => void {
+/** @deprecated Use subscribePanelCapture */
+export const subscribeShaderCapture = subscribePanelCapture
+export function registerPanelRecordCanvas(): () => void {
   return NOOP
 }
-export function getShaderRecordCanvas(): null {
+/** @deprecated Use registerPanelRecordCanvas */
+export const registerShaderRecordCanvas = registerPanelRecordCanvas
+export function getPanelRecordCanvas(): null {
   return null
 }
-export function registerShaderRecordPrepare(): () => void {
+/** @deprecated Use getPanelRecordCanvas */
+export const getShaderRecordCanvas = getPanelRecordCanvas
+export function registerPanelRecordPrepare(): () => void {
   return NOOP
 }
-export function getShaderRecordPrepare(): null {
+/** @deprecated Use registerPanelRecordPrepare */
+export const registerShaderRecordPrepare = registerPanelRecordPrepare
+export function getPanelRecordPrepare(): null {
   return null
 }
-export function registerShaderRecordFrame(): () => void {
+/** @deprecated Use getPanelRecordPrepare */
+export const getShaderRecordPrepare = getPanelRecordPrepare
+export function registerPanelRecordFrame(): () => void {
   return NOOP
 }
-export function getShaderRecordFrame(): null {
+/** @deprecated Use registerPanelRecordFrame */
+export const registerShaderRecordFrame = registerPanelRecordFrame
+export function getPanelRecordFrame(): null {
   return null
 }
-export function registerShaderGifExport(): () => void {
+/** @deprecated Use getPanelRecordFrame */
+export const getShaderRecordFrame = getPanelRecordFrame
+export function registerPanelGifExport(): () => void {
   return NOOP
 }
-export function getShaderGifExport(): null {
+/** @deprecated Use registerPanelGifExport */
+export const registerShaderGifExport = registerPanelGifExport
+export function getPanelGifExport(): null {
   return null
 }
-export function registerShaderVideoExport(): () => void {
+/** @deprecated Use getPanelGifExport */
+export const getShaderGifExport = getPanelGifExport
+export function registerPanelVideoExport(): () => void {
   return NOOP
 }
-export function getShaderVideoExport(): null {
+/** @deprecated Use registerPanelVideoExport */
+export const registerShaderVideoExport = registerPanelVideoExport
+export function getPanelVideoExport(): null {
   return null
 }
-export function subscribeShaderRecording(): () => void {
+/** @deprecated Use getPanelVideoExport */
+export const getShaderVideoExport = getPanelVideoExport
+export function subscribePanelRecording(): () => void {
   return NOOP
 }
-export function setShaderRecording(): void {}
+/** @deprecated Use subscribePanelRecording */
+export const subscribeShaderRecording = subscribePanelRecording
+export function setPanelRecording(): void {}
+/** @deprecated Use setPanelRecording */
+export const setShaderRecording = setPanelRecording
 
 // Animation clock — always runs on real time in prod (no panel to pause).
 export type { PanelAnimationSnapshot } from "./hooks/animation-clock"
@@ -274,6 +311,11 @@ export function usePanelThemeContext(): "dark" | "light" {
 // no registry, no overlay. The shader runs with its default config.
 export type { UsePanelOptions } from "./hooks/use-panel"
 export { inferPanelFields } from "./infer"
+export {
+  compositeCaptureFrame,
+  type CaptureLayer,
+  type CompositeCaptureOptions,
+} from "./capture/composite"
 export function usePanel<T>(options: {
   defaults: T
 }): [T, (next: T) => void] {

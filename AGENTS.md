@@ -259,23 +259,26 @@ Low-level clock: `advancePanelAnimationDelta`, `playPanelAnimation` /
 
 The export footer (`ControlExport`, `showExport` default true on
 `Panel`) has no handle on your renderer. Register host functions from
-`@tjcages/panels`. **Names are still shader-prefixed** — that is the
-shipped API.
+`@tjcages/panels`. Prefer `registerPanel*` names. `registerShader*`
+aliases remain for back-compat (same function identity).
 
 Each `register*` takes the fn or `null` and returns an unsubscribe.
 Call from `useEffect` and return the unsubscribe.
 
 | Export | Register | Signature |
 |---|---|---|
-| Hi-res PNG | `registerShaderCapture` | `(opts: { maxEdge: number }) => Promise<Blob>` |
-| GIF | `registerShaderGifExport` | `(opts: { durationSec, fps, maxEdge, onProgress? }) => Promise<Blob>` |
-| Host video session | `registerShaderVideoExport` | `() => Promise<{ stop: () => Promise<Blob> }>` |
-| Record canvas | `registerShaderRecordCanvas` | `() => HTMLCanvasElement \| null` |
-| Record prepare | `registerShaderRecordPrepare` | `() => Promise<void>` |
-| Per-frame paint | `registerShaderRecordFrame` | `() => void \| Promise<void>` |
+| Hi-res PNG | `registerPanelCapture` | `(opts: { maxEdge: number }) => Promise<Blob>` |
+| GIF | `registerPanelGifExport` | `(opts: { durationSec, fps, maxEdge, onProgress? }) => Promise<Blob>` |
+| Host video session | `registerPanelVideoExport` | `() => Promise<{ stop: () => Promise<Blob> }>` |
+| Record canvas | `registerPanelRecordCanvas` | `() => HTMLCanvasElement \| null` |
+| Record prepare | `registerPanelRecordPrepare` | `() => Promise<void>` |
+| Per-frame paint | `registerPanelRecordFrame` | `() => void \| Promise<void>` |
 
-Also: `setShaderRecording(active, { continuous? })`,
-`subscribeShaderRecording`, plus `get*` counterparts.
+Composite canvas + overlay into one PNG: `compositeCaptureFrame({ layers, maxEdge? })` — pass `CanvasImageSource`s bottom→top (host rasterizes DOM). No extra deps.
+
+Also: `setPanelRecording(active, { continuous? })`,
+`subscribePanelRecording`, plus `get*` counterparts. `registerShader*`
+aliases still work.
 
 `maxEdge` is the requested longest-edge px. The registrant clamps to
 the GPU limit and preserves aspect.

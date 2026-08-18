@@ -23,7 +23,7 @@ Drop-in floating panel. One hook owns the state and injects the UI. Compiles out
    - Reload keeps edits (`usePanel` persists to `localStorage` unless `persist: false`).
    - Multi-target: the header switcher scrolls (`scrollTo`) or routes (`onSelect`) and then shows that target's fields.
 
-  4. Field types, collections, overlay/drag, capture registry, and production no-op: read **`AGENTS.md`**. Capture fns are still `registerShader*`. Shorter copy: `llms.txt`.
+  4. Field types, collections, overlay/drag, capture registry, and production no-op: read **`AGENTS.md`**. Prefer `registerPanel*` capture names (`registerShader*` aliases remain). Recipes: `examples/` in the repo. Shorter copy: `llms.txt`.
 
 ## Rules
 
