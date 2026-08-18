@@ -29,8 +29,12 @@
     },
     "./package.json": "./package.json"
   },
+  "bin": {
+    "panels": "./bin/panels.mjs"
+  },
   "files": [
     "dist",
+    "bin",
     "README.md",
     "SETUP_PROMPT.md",
     "AGENTS.md",
@@ -44,6 +48,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
+    "test:setup": "node scripts/test-setup-cli.mjs",
     "prepare": "npm run build",
     "prepublishOnly": "pnpm typecheck && pnpm build"
   },
