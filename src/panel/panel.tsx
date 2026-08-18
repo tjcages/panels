@@ -13,6 +13,7 @@ import { ControlAnimation } from "../controls/animation-controls"
 import { ControlExport } from "../controls/export-controls"
 import { ControlQuickActions } from "../controls/quick-actions"
 import { ControlSection } from "../controls/section"
+import { FieldErrorBoundary } from "./field-error-boundary"
 import { renderPanelField, type AnyRenderableField } from "./render-field"
 import type { PanelPrompt } from "../prompts"
 import { FloatingPanel } from "./floating-panel"
@@ -68,7 +69,7 @@ export function Panel<T extends Record<string, unknown>>({
   showExport = true,
   onSelect,
 }: {
-  /** Used as the localStorage key (`shader-dev:<id>`) when `persist` is true. */
+  /** Used as the localStorage key (`panels:<id>`) when `persist` is true. */
   id?: string
   title: string
   /** Which side of the viewport the panel docks to. Default `"right"`. */
@@ -88,7 +89,7 @@ export function Panel<T extends Record<string, unknown>>({
   shortcutHint?: boolean
   /** AI-prompt rail at the top of the panel. Pass `[]` to hide. */
   prompts?: ReadonlyArray<PanelPrompt>
-  /** Persist values to `localStorage["shader-dev:<id>"]`. Requires `id`. Default true. */
+  /** Persist values to `localStorage["panels:<id>"]`. Requires `id`. Default true. */
   persist?: boolean
   defaultTheme?: PanelTheme
   /** sessionStorage key for the header theme toggle. */
@@ -418,6 +419,7 @@ export function Panel<T extends Record<string, unknown>>({
       inline={inline}
       peek={resolvedPeek}
     >
+      <FieldErrorBoundary fieldKey="panel-shell" message="Panel failed to render">
       <div className="panel-fields">
         {showAnimation ? <ControlAnimation /> : null}
 
@@ -527,6 +529,7 @@ export function Panel<T extends Record<string, unknown>>({
           {status ? <div className="panel-status">{status}</div> : null}
         </div>
       </div>
+      </FieldErrorBoundary>
     </FloatingPanel>
   )
 }
