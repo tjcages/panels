@@ -2,7 +2,7 @@
 
 > Floating React control panel for any live state. One hook (`usePanel`). Compiles out of production. Toggle ⌘⌥D / Ctrl+Alt+D.
 
-Install: `npm install @tjcages/panels`. Install prompt: `SETUP_PROMPT.md`. Full catalog: `AGENTS.md`. Skill: `skills/panels/SKILL.md`.
+Install: `npm install @tjcages/panels`. Install prompt: `SETUP_PROMPT.md`. Agent brief: `AGENT.md` / https://offbr.co/tools/panels/installation. Docs: https://offbr.co/tools/panels/docs/. Full catalog: `AGENTS.md`. Skill: `skills/panels/SKILL.md`.
 
 Do not invent APIs. No `type: "text"` field. Prefer `registerPanel*` capture names; `registerShader*` aliases remain.
 

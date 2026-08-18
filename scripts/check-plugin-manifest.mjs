@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -15,8 +15,16 @@ function readJson(relative) {
   }
 }
 
+function requireFile(relative) {
+  const path = join(root, relative)
+  if (!existsSync(path)) {
+    throw new Error(`missing ${relative}`)
+  }
+}
+
 const marketplace = readJson(".claude-plugin/marketplace.json")
-const plugin = readJson(".claude-plugin/plugin.json")
+const claudePlugin = readJson(".claude-plugin/plugin.json")
+const cursorPlugin = readJson(".cursor-plugin/plugin.json")
 
 if (marketplace.data.name !== "tjcages-panels") {
   throw new Error("marketplace.json name must be tjcages-panels")
@@ -28,11 +36,34 @@ const entry = marketplace.data.plugins?.[0]
 if (!entry || entry.name !== "panels" || entry.source !== "./") {
   throw new Error("marketplace.json must list plugins[0] name=panels source=./")
 }
-if (plugin.data.name !== "panels") {
-  throw new Error("plugin.json name must be panels")
+if (claudePlugin.data.name !== "panels") {
+  throw new Error(".claude-plugin/plugin.json name must be panels")
 }
-if (typeof plugin.data.description !== "string" || plugin.data.description.length < 20) {
-  throw new Error("plugin.json description is missing")
+if (
+  typeof claudePlugin.data.description !== "string" ||
+  claudePlugin.data.description.length < 20
+) {
+  throw new Error(".claude-plugin/plugin.json description is missing")
 }
 
-console.log("plugin manifests ok: tjcages-panels / panels")
+if (cursorPlugin.data.name !== "panels") {
+  throw new Error(".cursor-plugin/plugin.json name must be panels")
+}
+if (cursorPlugin.data.homepage !== "https://offbr.co/tools/panels") {
+  throw new Error(".cursor-plugin/plugin.json homepage must be https://offbr.co/tools/panels")
+}
+if (cursorPlugin.data.skills !== "./skills") {
+  throw new Error(".cursor-plugin/plugin.json skills must be ./skills")
+}
+if (cursorPlugin.data.logo !== "assets/logo.svg") {
+  throw new Error(".cursor-plugin/plugin.json logo must be assets/logo.svg")
+}
+if (!cursorPlugin.data.author?.name) {
+  throw new Error(".cursor-plugin/plugin.json author.name is required")
+}
+
+requireFile("assets/logo.svg")
+requireFile("skills/panels/SKILL.md")
+requireFile("AGENT.md")
+
+console.log("plugin manifests ok: tjcages-panels / panels (claude + cursor)")

@@ -1,13 +1,16 @@
 {
   "name": "panels",
+  "displayName": "Panels",
   "description": "Add a live React control panel with usePanel from @tjcages/panels.",
   "version": "0.1.1",
   "author": {
     "name": "tjcages",
-    "url": "https://github.com/tjcages"
+    "email": "ty@offbr.co"
   },
   "homepage": "https://offbr.co/tools/panels",
   "repository": "https://github.com/tjcages/panels",
   "license": "MIT",
-  "keywords": ["panels", "react", "devtools", "usePanel"]
+  "keywords": ["panels", "react", "devtools", "usePanel"],
+  "logo": "assets/logo.svg",
+  "skills": "./skills"
 }

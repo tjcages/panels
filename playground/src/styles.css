@@ -384,6 +384,10 @@ a.tab {
   margin-top: 22px;
 }
 
+.docs-body a {
+  color: var(--accent);
+}
+
 .docs-block h3 {
   margin: 0 0 8px;
   font-size: 1rem;

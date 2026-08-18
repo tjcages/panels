@@ -36,6 +36,7 @@
     "dist",
     "bin",
     "README.md",
+    "AGENT.md",
     "SETUP_PROMPT.md",
     "AGENTS.md",
     "llms.txt",
@@ -83,7 +84,7 @@
     "type": "git",
     "url": "git+https://github.com/tjcages/panels.git"
   },
-  "homepage": "https://github.com/tjcages/panels#readme",
+  "homepage": "https://offbr.co/tools/panels",
   "bugs": {
     "url": "https://github.com/tjcages/panels/issues"
   },

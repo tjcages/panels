@@ -21,4 +21,4 @@ pnpm build
 pnpm preview
 ```
 
-GitHub Pages (this repo): enable **Settings → Pages → GitHub Actions**. The `Pages` workflow deploys `playground/dist` to `https://tjcages.github.io/panels/`.
+Hosted at [offbr.co/tools/panels/docs](https://offbr.co/tools/panels/docs/). Production builds set `DOCS_BASE=/tools/panels/docs/` and copy `playground/dist` into the offbr repo at `public/tools/panels/docs/`.

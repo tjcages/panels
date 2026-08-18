@@ -1,6 +1,6 @@
 # Recipes
 
-Copy these into the **host app**. This folder is not compiled and is not in the package build. Runnable Settings + Dashboard demos live in [`playground/`](../playground). A hosted gallery is still a separate docs-site track.
+Copy these into the **host app**. This folder is not compiled and is not in the package build. Runnable Settings + Dashboard demos live in [`playground/`](../playground) and at [offbr.co/tools/panels/docs](https://offbr.co/tools/panels/docs/). A hosted gallery is still a separate track.
 
 Each recipe is a minimal integration: files an agent would edit, plus one complete TSX snippet. Paste into the component that owns the values. Do not wrap production UI in `ToolShell` / `PanelRoot`.
 

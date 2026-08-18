@@ -8,6 +8,22 @@ export function InstallPage() {
       lede="One package. The panel compiles out of production. Agents can set themselves up from the files that ship on npm."
     >
       <section className="docs-block">
+        <h3>Hosted</h3>
+        <p>
+          This site lives at{" "}
+          <a href="https://offbr.co/tools/panels/docs/">
+            offbr.co/tools/panels/docs
+          </a>
+          . Package card:{" "}
+          <a href="https://offbr.co/tools/panels">offbr.co/tools/panels</a>.
+          Agent brief:{" "}
+          <a href="https://offbr.co/tools/panels/installation">
+            /tools/panels/installation
+          </a>
+          .
+        </p>
+      </section>
+      <section className="docs-block">
         <h3>Package</h3>
         <pre>{`npm install @tjcages/panels`}</pre>
         <p>
@@ -30,7 +46,13 @@ export function InstallPage() {
 
 # Claude Code
 /plugin marketplace add tjcages/panels
-/plugin install panels@tjcages-panels`}</pre>
+/plugin install panels@tjcages-panels
+
+# Cursor plugin (this repo)
+# .cursor-plugin/plugin.json — submit at cursor.com/marketplace/publish
+
+# Agent brief
+# https://offbr.co/tools/panels/installation`}</pre>
       </section>
       <section className="docs-block">
         <h3>One hook</h3>

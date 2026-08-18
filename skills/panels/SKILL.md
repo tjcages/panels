@@ -5,7 +5,7 @@ description: Add a live React control panel with usePanel from @tjcages/panels. 
 
 # @tjcages/panels
 
-Drop-in floating panel. One hook owns the state and injects the UI. Compiles out of production. Toggle with ⌘⌥D / Ctrl+Alt+D. Install with `npx @tjcages/panels setup`, `npx skills add tjcages/panels --skill panels`, or Claude Code `/plugin marketplace add tjcages/panels` then `/plugin install panels@tjcages-panels`.
+Drop-in floating panel. One hook owns the state and injects the UI. Compiles out of production. Toggle with ⌘⌥D / Ctrl+Alt+D. Install with `npx @tjcages/panels setup`, `npx skills add tjcages/panels --skill panels`, or Claude Code `/plugin marketplace add tjcages/panels` then `/plugin install panels@tjcages-panels`. Hosted brief: https://offbr.co/tools/panels/installation. Docs: https://offbr.co/tools/panels/docs/.
 
 ## Steps
 

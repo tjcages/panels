@@ -100,4 +100,6 @@ Optional installs:
   npx skills add tjcages/panels --skill panels
   Claude Code: /plugin marketplace add tjcages/panels
                then /plugin install panels@tjcages-panels
+  Docs: https://offbr.co/tools/panels/docs/
+  Agent: https://offbr.co/tools/panels/installation
 `)
