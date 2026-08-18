@@ -1117,7 +1117,7 @@ export const PANEL_CSS = `
   height: 12px;
   transition: transform 200ms ease;
 }
-.panel-section[data-panel-open="true"] .panel-section-caret { transform: rotate(180deg); }
+.panel-section[data-panel-open="true"] > .panel-section-header .panel-section-caret { transform: rotate(180deg); }
 .panel-section-reset {
   display: flex;
   align-items: center;

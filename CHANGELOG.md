@@ -42,6 +42,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Entrance animation on remount** — the float shell's position restore and scale-up entrance were skipped when the panel mounted fresh (the portal renders null pre-mount); effects now wait for the element. (OFF-456)
 - **Panel reskin** — the injected stylesheet now matches the Cloudflare Connect dev panel: opaque `#1c1c1c` dark theme (no backdrop blur), 8px frame radius, 11px single text size, `#2a2a2a` control surfaces, 4px control radius, compact 24px rows, thin scrollbars, bottom fade mask on scrollable bodies. Light theme maps the same geometry to the lab's light palette. Default panel width is now 360px (was 280px). (OFF-455)
 
+## [0.1.1] — 2026-08-18
+
+### Fixed
+- **Add stripe** — inserts a new fixed `#888888` row (`startFrom` 0, opacity 1, width from the last row or 4) instead of cloning the previous stripe. (OFF-455)
+- **Nested section carets** — open-state rotation uses a child selector so a parent folder no longer flips every nested caret. (OFF-455)
+
 ## [1.2.0] — 2026-07-08
 
 ### Added

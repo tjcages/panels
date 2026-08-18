@@ -1,6 +1,6 @@
 {
   "name": "@tjcages/panels",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Drop-in dev panel that wraps any React tool — shaders, canvases, 3D scenes, dashboards — with live controls, item collections, and image/video export. Compiles out of production.",
   "type": "module",
   "sideEffects": false,
