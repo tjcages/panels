@@ -311,6 +311,23 @@ export function ColorPopover({
   const selectedItemRef = useRef<HTMLButtonElement | null>(null)
   const listRef = useRef<HTMLDivElement | null>(null)
 
+  // Keyboard navigation over the library flattened across groups.
+  const flatColors = useMemo(
+    () => (library ?? []).flatMap((group) => group.colors),
+    [library],
+  )
+  const groupOffsets = useMemo(() => {
+    const offsets: number[] = []
+    let acc = 0
+    for (const group of library ?? []) {
+      offsets.push(acc)
+      acc += group.colors.length
+    }
+    return offsets
+  }, [library])
+  const [highlight, setHighlight] = useState(0)
+  const typeahead = useRef({ buffer: "", at: 0 })
+
   const normalizedColor = normalizeHex(color)
   const [draftColor, setDraftColor] = useState(normalizedColor)
   const [hexDraft, setHexDraft] = useState(normalizedColor.toUpperCase())
@@ -395,11 +412,15 @@ export function ColorPopover({
     const trigger = triggerRef.current
     if (!trigger) return
     setTab("library")
+    const selectedFlat = flatColors.findIndex(
+      (c) => c.hex.toLowerCase() === normalizedColor,
+    )
+    setHighlight(Math.max(0, selectedFlat))
     setPos(placePopover(trigger))
     setOpen(true)
-  }, [])
+  }, [flatColors, normalizedColor])
 
-  // Dismiss on outside pointerdown / Escape; reposition on scroll & resize.
+  // Dismiss on outside pointerdown; reposition on scroll & resize.
   useEffect(() => {
     if (!open) return
     const onPointerDown = (event: PointerEvent) => {
@@ -411,9 +432,6 @@ export function ColorPopover({
         return
       setOpen(false)
     }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false)
-    }
     const reposition = () => {
       const trigger = triggerRef.current
       if (trigger) setPos(placePopover(trigger))
@@ -423,16 +441,133 @@ export function ColorPopover({
       reposition()
     }
     window.addEventListener("pointerdown", onPointerDown, true)
-    window.addEventListener("keydown", onKeyDown)
     window.addEventListener("scroll", onScroll, true)
     window.addEventListener("resize", reposition)
     return () => {
       window.removeEventListener("pointerdown", onPointerDown, true)
-      window.removeEventListener("keydown", onKeyDown)
       window.removeEventListener("scroll", onScroll, true)
       window.removeEventListener("resize", reposition)
     }
   }, [open])
+
+  // Scroll affordances: fade whichever end of the list is clipped.
+  const updateListFades = useCallback(() => {
+    const sc = listRef.current
+    if (!sc) return
+    sc.dataset.fadeTop = String(sc.scrollTop > 1)
+    sc.dataset.fadeBottom = String(sc.scrollTop + sc.clientHeight < sc.scrollHeight - 1)
+  }, [])
+
+  // Scroll the highlighted item into view inside the list only —
+  // scrollIntoView could also scroll the page.
+  const keepHighlightInView = useCallback(
+    (index: number) => {
+      const list = listRef.current
+      const el = list?.querySelector<HTMLElement>(
+        `[data-panel-flat-index="${index}"]`,
+      )
+      if (!list || !el) return
+      const listRect = list.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      if (elRect.top < listRect.top + 8) {
+        list.scrollTop += elRect.top - listRect.top - 8
+      } else if (elRect.bottom > listRect.bottom - 8) {
+        list.scrollTop += elRect.bottom - listRect.bottom + 8
+      }
+      updateListFades()
+    },
+    [updateListFades],
+  )
+
+  // Keyboard while open. Capture-phase so an open popover always wins, with
+  // stopPropagation so panel-level handlers (Escape etc.) never fire from it.
+  useEffect(() => {
+    if (!open) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null
+      // Leave text fields alone — the hex input owns its own keys.
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+      )
+        return
+
+      if (event.key === "Escape") {
+        event.preventDefault()
+        event.stopPropagation()
+        setOpen(false)
+        return
+      }
+      if (
+        hasLibrary &&
+        (event.key === "ArrowLeft" ||
+          event.key === "ArrowRight" ||
+          event.key === "Tab")
+      ) {
+        event.preventDefault()
+        event.stopPropagation()
+        setTab((t) => (t === "library" ? "picker" : "library"))
+        return
+      }
+      if (!hasLibrary || tab !== "library" || flatColors.length === 0) return
+
+      const move = (delta: number) => {
+        const next =
+          (highlight + delta + flatColors.length) % flatColors.length
+        setHighlight(next)
+        keepHighlightInView(next)
+      }
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault()
+        event.stopPropagation()
+        move(event.key === "ArrowDown" ? 1 : -1)
+        return
+      }
+      if (event.key === "Enter") {
+        event.preventDefault()
+        event.stopPropagation()
+        const picked = flatColors[highlight]
+        if (picked) {
+          updateColor(picked.hex)
+          setOpen(false)
+        }
+        return
+      }
+      // Type-ahead by color-name first letters.
+      if (
+        event.key.length === 1 &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey
+      ) {
+        event.stopPropagation()
+        const now = Date.now()
+        const t = typeahead.current
+        t.buffer = now - t.at > 500 ? event.key : t.buffer + event.key
+        t.at = now
+        const query = t.buffer.toLowerCase()
+        const from = query.length === 1 ? highlight + 1 : highlight
+        for (let step = 0; step < flatColors.length; step++) {
+          const i = (from + step) % flatColors.length
+          if (flatColors[i].label.toLowerCase().startsWith(query)) {
+            setHighlight(i)
+            keepHighlightInView(i)
+            return
+          }
+        }
+      }
+    }
+    window.addEventListener("keydown", onKeyDown, true)
+    return () => window.removeEventListener("keydown", onKeyDown, true)
+  }, [
+    open,
+    tab,
+    hasLibrary,
+    flatColors,
+    highlight,
+    keepHighlightInView,
+    updateColor,
+  ])
 
   // Entrance: scale up from the anchored corner. Close stays instant (the
   // element just unmounts).
@@ -452,14 +587,6 @@ export function ColorPopover({
     // Run only on open — repositions must not replay the entrance.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
-
-  // Scroll affordances: fade whichever end of the list is clipped.
-  const updateListFades = useCallback(() => {
-    const sc = listRef.current
-    if (!sc) return
-    sc.dataset.fadeTop = String(sc.scrollTop > 1)
-    sc.dataset.fadeBottom = String(sc.scrollTop + sc.clientHeight < sc.scrollHeight - 1)
-  }, [])
 
   // Center the selection by scrolling only the list — scrollIntoView would
   // also scroll the page to center the popover.
@@ -559,17 +686,23 @@ export function ColorPopover({
                     if (node) updateListFades()
                   }}
                 >
-                  {library?.map((group) => (
+                  {library?.map((group, groupIndex) => (
                     <div key={group.name} className="panel-color-pop-group">
                       <span className="panel-color-pop-group-label">{group.name}</span>
-                      {group.colors.map((c) => {
+                      {group.colors.map((c, colorIndex) => {
                         const selected = c.hex.toLowerCase() === displayColor
+                        const flatIndex = groupOffsets[groupIndex] + colorIndex
                         return (
                           <button
                             ref={selected ? selectedItemRef : undefined}
                             key={`${group.name}-${c.label}`}
                             type="button"
                             aria-pressed={selected}
+                            data-panel-flat-index={flatIndex}
+                            data-panel-active={
+                              flatIndex === highlight ? "true" : "false"
+                            }
+                            onMouseEnter={() => setHighlight(flatIndex)}
                             title={
                               c.oklch
                                 ? `${c.oklch} / ${c.p3 ?? c.hex} / fallback ${c.hex.toUpperCase()}`
@@ -812,6 +945,7 @@ export const colorPopoverStyles = `
 }
 
 .panel-color-pop-item:hover,
+.panel-color-pop-item[data-panel-active="true"],
 .panel-color-pop-item-selected { background: #2a2a2a; }
 
 .panel-color-pop-item-swatch {

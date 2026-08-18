@@ -260,6 +260,14 @@ export function renderPanelField(): null {
 export const PanelRoot = NULL_COMPONENT
 export const Panel = NULL_COMPONENT
 export const FloatingPanel = NULL_COMPONENT
+export const PanelHeaderSelect = NULL_COMPONENT
+export type {
+  PanelHeaderSelectOption,
+  PanelHeaderSelectProps,
+} from "./panel/header-select"
+export const PanelCloseButton = NULL_COMPONENT
+export const PanelCloseIcon = NULL_COMPONENT
+export type { PanelCloseButtonProps } from "./controls/close-button"
 export const ToolShell = NULL_COMPONENT
 export const ToolPanel = NULL_COMPONENT
 export const PanelToolPanel = NULL_COMPONENT

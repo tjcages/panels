@@ -208,7 +208,9 @@ export const PANEL_CSS = `
    the hook plays the scale-up entrance when the panel surfaces. */
 .panel-floating[data-panel-float="true"] {
   bottom: auto;
-  max-height: calc(100dvh - 32px);
+  /* Cap the panel; a taller viewport centers it vertically on first open
+     (see PANEL_MAX_HEIGHT in use-drag-resize). */
+  max-height: min(calc(100dvh - 32px), 664px);
   transition: none;
 }
 .panel-floating[data-panel-float="true"][data-panel-collapsed="true"] {
@@ -475,6 +477,132 @@ export const PANEL_CSS = `
 .panel-switcher:hover { background-color: var(--panel-surface); }
 .panel-switcher:focus { outline: none; background-color: var(--panel-surface); }
 
+/* ── Header select — custom switcher dropdown (PanelHeaderSelect) ─────────
+   Trigger fits its label when closed and animates its width to match the
+   menu while open; the menu renders inline-absolute inside the header so it
+   shares the panel's stacking. */
+.panel-hselect {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+[data-panel] .panel-hselect-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: transparent;
+  color: var(--panel-text);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-panel] .panel-hselect-trigger:hover,
+[data-panel] .panel-hselect-trigger:focus-visible,
+[data-panel] .panel-hselect-trigger[aria-expanded="true"] {
+  outline: none;
+  background-color: var(--panel-surface);
+}
+/* No ellipsis — the width fits the label; clip only while animating. */
+.panel-hselect-value {
+  min-width: 0;
+  overflow: hidden;
+}
+.panel-hselect-chevron {
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+/* Invisible natural-width mirror of the trigger — measured so the trigger's
+   explicit (animatable) width can track the current label. */
+.panel-hselect-sizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.panel-hselect-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 1002;
+  width: max-content;
+  min-width: 100%;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.28), 0 12px 32px rgb(0 0 0 / 0.32);
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-scrollbar-thumb) transparent;
+  animation: panel-hselect-in 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes panel-hselect-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+[data-panel] .panel-hselect-option {
+  /* No width: 100% — a percentage here collapses the menu's max-content
+     sizing to its min-width and clips every label. Block-level flex options
+     stretch to the menu naturally. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--panel-label);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: left;
+  white-space: nowrap;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 120ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 120ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-panel] .panel-hselect-option[data-panel-active="true"] {
+  background: var(--panel-surface-active);
+  color: var(--panel-label-active);
+}
+[data-panel] .panel-hselect-option[aria-selected="true"] {
+  color: var(--panel-text);
+}
+.panel-hselect-check {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-panel] .panel-hselect-trigger { transition: none; }
+  .panel-hselect-menu { animation: none; }
+  [data-panel] .panel-hselect-option { transition: none; }
+}
+
 .panel-close-btn {
   position: relative;
   display: flex;
@@ -502,6 +630,10 @@ export const PANEL_CSS = `
   background: var(--panel-surface);
 }
 .panel-close-btn svg { width: 12px; height: 12px; }
+/* Dense-row variant — same treatment, smaller footprint and hit area. */
+.panel-close-btn[data-panel-size="sm"] { width: 18px; height: 18px; }
+.panel-close-btn[data-panel-size="sm"]::before { inset: -4px; }
+.panel-close-btn[data-panel-size="sm"] svg { width: 10px; height: 10px; }
 
 .panel-panel-body {
   min-height: 0;
@@ -1491,12 +1623,21 @@ export const PANEL_CSS = `
   width: 100%;
   padding: 4px 0;
 }
+/* With a label the group shares the slider rows' two-column grid. */
+.panel-toggle-group:has(> .panel-toggle-group-label) {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
 .panel-toggle-group-label {
   font-size: 11px;
   font-weight: 400;
   color: var(--panel-label);
   line-height: 1.35;
-  padding: 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .panel-toggle-group-track {
   display: flex;
@@ -1577,11 +1718,14 @@ export const PANEL_CSS = `
 [data-panel] .panel-select[data-panel-layout="inline"]:hover {
   background: var(--panel-surface-active);
 }
+/* Stacked selects share the slider rows' label column (0.9fr @ 8px gap) so
+   labels align down the panel; the control spans the track+input width. */
 .panel-select[data-panel-layout="stacked"] {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
   height: auto;
   padding: 0;
   background: transparent;
@@ -1594,7 +1738,9 @@ export const PANEL_CSS = `
   line-height: 1.35;
 }
 .panel-select[data-panel-layout="stacked"] .panel-select-label {
-  white-space: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .panel-select[data-panel-layout="inline"] .panel-select-label {
   flex: 1 1 auto;
@@ -1878,16 +2024,19 @@ export const PANEL_CSS = `
 
 /* ── Preset selector ──────────────────────────────────────────────────────── */
 .panel-presets {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
   padding: 0 0 2px;
 }
 .panel-presets-label {
   font-size: 11px;
   font-weight: 400;
   color: var(--panel-label);
-  padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 [data-panel] .panel-preset-select {
   appearance: none;
@@ -2259,34 +2408,9 @@ export const PANEL_CSS = `
 .panel-collection-row[data-panel-open="true"] .panel-collection-caret {
   transform: rotate(180deg);
 }
-[data-panel] .panel-collection-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
+/* Layout only — look comes from the shared .panel-close-btn. */
+.panel-collection-remove {
   flex-shrink: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--panel-muted-icon);
-  transition: color 150ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 150ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-[data-panel] .panel-collection-remove:hover:not(:disabled) {
-  color: var(--panel-danger);
-  background: var(--panel-surface);
-}
-[data-panel] .panel-collection-remove:active:not(:disabled) {
-  transform: scale(0.98);
-}
-[data-panel] .panel-collection-remove:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-.panel-collection-remove svg {
-  width: 12px;
-  height: 12px;
 }
 .panel-collection-row-body {
   display: flex;

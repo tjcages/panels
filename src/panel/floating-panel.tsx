@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "../lib/cn"
+import { PanelCloseButton } from "../controls/close-button"
 import { ControlThemeToggle } from "../controls/theme-toggle"
 import {
   HINT_SIDES,
@@ -179,14 +180,7 @@ export function FloatingPanel({
               {showThemeToggle ? (
                 <ControlThemeToggle storageKey={themeStorageKey} />
               ) : null}
-              <button
-                type="button"
-                onClick={onToggle}
-                aria-label="Close panel"
-                className="panel-close-btn"
-              >
-                <CloseIcon />
-              </button>
+              <PanelCloseButton onClick={onToggle} ariaLabel="Close panel" />
             </div>
           </div>
           <div className="panel-panel-body" ref={bodyRef}>
@@ -212,20 +206,4 @@ export function FloatingPanel({
   if (!target) return null
 
   return createPortal(panel, target)
-}
-
-function CloseIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  )
 }
