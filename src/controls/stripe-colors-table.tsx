@@ -580,6 +580,7 @@ export function ControlStripeColorsTable({
     >
       {/* Flip is built in, so the Distribution block always renders. */}
       <div className="panel-stripes-palette-wrap">
+        <div className="panel-stripes-palette-head">
           <span className="panel-stripes-palette-title">Distribution</span>
           <div className="panel-stripes-palette-toolbar">
             {onShufflePalette ? (
@@ -611,26 +612,27 @@ export function ControlStripeColorsTable({
               Flip
             </button>
           </div>
-          {showRampEasing && onRampEasingChange ? (
-            <EasingControl
-              label="Brightness easing"
-              value={rampEasingValue}
-              options={rampEasingOptions}
-              disabled={disabled}
-              onChange={onRampEasingChange}
-            />
-          ) : null}
-          {Object.keys(thresholdEasingOptions).length > 0 &&
-          onThresholdEasingChange ? (
-            <EasingControl
-              label="Threshold easing"
-              value={thresholdEasingValue}
-              options={thresholdEasingOptions}
-              disabled={disabled}
-              onChange={onThresholdEasingChange}
-            />
-          ) : null}
         </div>
+        {showRampEasing && onRampEasingChange ? (
+          <EasingControl
+            label="Brightness easing"
+            value={rampEasingValue}
+            options={rampEasingOptions}
+            disabled={disabled}
+            onChange={onRampEasingChange}
+          />
+        ) : null}
+        {Object.keys(thresholdEasingOptions).length > 0 &&
+        onThresholdEasingChange ? (
+          <EasingControl
+            label="Threshold easing"
+            value={thresholdEasingValue}
+            options={thresholdEasingOptions}
+            disabled={disabled}
+            onChange={onThresholdEasingChange}
+          />
+        ) : null}
+      </div>
       <button
         type="button"
         className="panel-stripes-drawer-toggle"
@@ -747,17 +749,28 @@ export const stripeColorsTableStyles = `
   margin-bottom: 10px;
 }
 
+/* Title left, actions right — one vertically-centered 24px row. */
+.panel-stripes-palette-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 24px;
+  min-width: 0;
+}
+
 .panel-stripes-palette-title {
   color: var(--panel-text-muted);
   font-weight: 400;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .panel-stripes-palette-toolbar {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: end;
-  gap: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -849,41 +862,57 @@ button.panel-stripes-palette-action:disabled {
   vector-effect: non-scaling-stroke;
 }
 
+/* Sub-section disclosure — matches the .panel-section-header language:
+   transparent 20px row, chevron leading, 500-weight label, muted count. */
 .panel-stripes-drawer-toggle {
-  display: grid;
-  grid-template-columns: 14px minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
   min-width: 0;
-  height: 28px;
+  height: 20px;
   margin-top: 8px;
-  padding: 0 8px;
-  border: 1px solid transparent;
+  padding: 0;
+  border: 0;
   border-radius: 4px;
-  background-color: var(--panel-surface);
-  color: var(--panel-text-muted);
+  background: transparent;
+  color: var(--panel-label);
   font: inherit;
   font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   text-align: left;
   cursor: pointer;
 }
 
+.panel-stripes-drawer-toggle svg {
+  flex-shrink: 0;
+  color: var(--panel-muted-icon);
+  transition: color 150ms ease;
+}
+
 .panel-stripes-drawer-toggle:not(:disabled):hover,
 .panel-stripes-drawer-toggle:not(:disabled):focus-visible {
-  background-color: var(--panel-surface-active);
-  color: var(--panel-text);
+  color: var(--panel-label-active);
   outline: none;
+}
+
+.panel-stripes-drawer-toggle:not(:disabled):hover svg,
+.panel-stripes-drawer-toggle:not(:disabled):focus-visible svg {
+  color: var(--panel-label-active);
 }
 
 .panel-stripes-drawer-toggle span:nth-child(2) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .panel-stripes-drawer-count {
+  margin-left: auto;
   color: var(--panel-text-muted);
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
 }
 

@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- **`PanelHeaderSelect`** — custom header dropdown: fit-to-text trigger that animates its width to the open menu, full listbox keyboard (wrapping arrows, Home/End, type-ahead, Enter commits, Escape contained), outside-click close. (OFF-457)
+- **Color popover keyboard** — arrows walk the library with in-list scrolling, Enter picks, arrows/Tab switch tabs, type-ahead by color name, Escape never leaks to panel handlers. (OFF-457)
 - **Slider value input** — every slider row is now label / stretchy track / editable value box (leva-style): type a value and press Enter, Escape reverts, arrow keys step (shift x10). (OFF-456)
 - **Header swipe throw** — in float mode, a two-finger trackpad swipe while hovering the header moves the panel with the fingers and releases it with the swipe velocity into the same dock/settle as a drag. (OFF-456)
 - **Free-float mode** — `float` prop on `FloatingPanel`: drag the panel by its header with release momentum, resize from all eight edges and corners, and dock to viewport edges (hint pills preview the dock target). The panel hard-clamps inside a 16px viewport margin, survives page zoom and ancestor transforms via per-gesture screen→style calibration, hides instantly on close, and scales back in from its docked edge. `floatStorageKey` keeps the placement across close/reopen. (OFF-454)
@@ -16,6 +18,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **`renderPanelField`** — exported field renderer for composing custom shells (e.g. the float shell) with schema-driven fields.
 
 ### Changed
+- **Select, toggle-group, and preset rows lay out horizontally** — label left in the shared slider label column, control right. (OFF-457)
+- **Stripe palette header** — Distribution + toolbar on one right-aligned row; the Colors drawer toggle speaks the section-header language. (OFF-457)
 - **Slider momentum requires a throw** — an ordinary release stops exactly where the pointer left it; the coast only engages above a real flick velocity, and a pause before release cancels it. (OFF-456)
 - **Panel spacing** — 1.5x horizontal padding in the body, header aligned so an empty title lets the switcher line up with content, action buttons center their labels with 12px x padding. (OFF-456)
 

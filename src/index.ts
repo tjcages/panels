@@ -18,6 +18,11 @@ export {
   persistPanelValues,
 } from "./persist"
 export { FloatingPanel } from "./panel/floating-panel"
+export {
+  PanelHeaderSelect,
+  type PanelHeaderSelectOption,
+  type PanelHeaderSelectProps,
+} from "./panel/header-select"
 export { Panel } from "./panel/panel"
 export {
   renderPanelField,
