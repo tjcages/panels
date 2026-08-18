@@ -71,11 +71,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tjcages/shader-panel.git"
+    "url": "git+https://github.com/tjcages/panels.git"
   },
-  "homepage": "https://github.com/tjcages/shader-panel#readme",
+  "homepage": "https://github.com/tjcages/panels#readme",
   "bugs": {
-    "url": "https://github.com/tjcages/shader-panel/issues"
+    "url": "https://github.com/tjcages/panels/issues"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=8",
