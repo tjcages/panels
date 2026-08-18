@@ -7,7 +7,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 - **Free-float mode** — `float` prop on `FloatingPanel`: drag the panel by its header with release momentum, resize from all eight edges and corners, and dock to viewport edges (hint pills preview the dock target). The panel hard-clamps inside a 16px viewport margin, survives page zoom and ancestor transforms via per-gesture screen→style calibration, hides instantly on close, and scales back in from its docked edge. `floatStorageKey` keeps the placement across close/reopen. (OFF-454)
-- **`playground.html`** — standalone browser harness for the built package (`python3 -m http.server` + open).
+- **`ColorPopover`** — dark color picker popover (Library/Picker tabs, injectable color library, saturation/hue picker, hex input, scroll fade masks, anchor-corner entrance). Replaces the native color input in `ControlColorInput`; no new dependencies. (OFF-455)
+- **`{ type: "gradient-stops" }` field** — 2D field / 1D ramp gradient editor with draggable stops, add/remove, and per-stop popover colors (`ControlGradientStops`). (OFF-455)
+- **`{ type: "stripe-table" }` field** — controlled stripe palette table: per-row color/opacity/threshold/width, drag reorder, flip, add/remove, optional easing editors (`ControlStripeColorsTable`). (OFF-455)
+- **Color library support** — `library` + `persist` options on color fields (`ControlLibraryColor`), with consumer-injected color data (`ColorLibraryGroup`). (OFF-455)
+- **`renderPanelField`** — exported field renderer for composing custom shells (e.g. the float shell) with schema-driven fields.
+
+### Changed
+- **Panel reskin** — the injected stylesheet now matches the Cloudflare Connect dev panel: opaque `#1c1c1c` dark theme (no backdrop blur), 8px frame radius, 11px single text size, `#2a2a2a` control surfaces, 4px control radius, compact 24px rows, thin scrollbars, bottom fade mask on scrollable bodies. Light theme maps the same geometry to the lab's light palette. Default panel width is now 360px (was 280px). (OFF-455)
 
 ## [1.2.0] — 2026-07-08
 

@@ -1,12 +1,14 @@
 "use client"
 
-import { useRef } from "react"
 import { cn } from "../lib/cn"
+import { ColorPopover, type ColorLibraryGroup } from "./color-popover"
 
 export interface ControlColorInputProps {
   label: string
   value: string
   onChange: (v: string) => void
+  /** Named swatch groups for the popover's Library tab; picker-only when absent. */
+  library?: ColorLibraryGroup[]
   className?: string
 }
 
@@ -14,26 +16,9 @@ export function ControlColorInput({
   label,
   value,
   onChange,
+  library,
   className,
 }: ControlColorInputProps) {
-  const hiddenRef = useRef<HTMLInputElement>(null)
-
-  const openPicker = () => {
-    const input = hiddenRef.current
-    if (!input) return
-    // showPicker() is the reliable way to open the native swatch — click()
-    // on a zero-size hidden input is ignored by some browsers.
-    try {
-      if (typeof input.showPicker === "function") {
-        input.showPicker()
-        return
-      }
-    } catch {
-      /* fall through to click() */
-    }
-    input.click()
-  }
-
   return (
     <div className={cn("panel-color", className)}>
       <span className="panel-color-label">{label}</span>
@@ -44,21 +29,13 @@ export function ControlColorInput({
           onChange={(e) => onChange(e.target.value)}
           className="panel-color-text"
         />
-        <button
-          type="button"
-          onClick={openPicker}
-          className="panel-color-swatch"
-          style={{ background: value }}
-          aria-label={`Pick color for ${label}`}
-        />
-        <input
-          ref={hiddenRef}
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="panel-color-native"
-          tabIndex={-1}
-          aria-hidden="true"
+        <ColorPopover
+          color={value}
+          onChange={onChange}
+          library={library}
+          ariaLabel={`Pick color for ${label}`}
+          triggerClassName="panel-color-swatch"
+          triggerStyle={{ background: value }}
         />
       </div>
     </div>

@@ -21,6 +21,7 @@ export type {
   PanelCollectionItem,
   PanelColorField,
   PanelField,
+  PanelGradientStopsField,
   PanelImageField,
   PanelReferenceField,
   PanelSide,
@@ -31,6 +32,7 @@ export type {
   PanelSelectField,
   PanelSelectOption,
   PanelSliderField,
+  PanelStripeTableField,
   PanelToggleField,
   PanelToggleGroupField,
   PanelToggleGroupOption,
@@ -247,6 +249,14 @@ export function usePanel<T>(options: {
 }
 
 // UI components — all return null in prod.
+export type {
+  AnyRenderableField,
+  RenderedField,
+  RenderFieldContext,
+} from "./panel/render-field"
+export function renderPanelField(): null {
+  return null
+}
 export const PanelRoot = NULL_COMPONENT
 export const Panel = NULL_COMPONENT
 export const FloatingPanel = NULL_COMPONENT
@@ -259,6 +269,13 @@ export const PanelShortcutBridge = NULL_COMPONENT
 export const ControlSlider = NULL_COMPONENT
 export const ControlSection = NULL_COMPONENT
 export const ControlColorInput = NULL_COMPONENT
+export const ColorPopover = NULL_COMPONENT
+export const colorPopoverStyles = ""
+export type {
+  ColorLibraryColor,
+  ColorLibraryGroup,
+  ColorPopoverProps,
+} from "./controls/color-popover"
 export const ControlImageInput = NULL_COMPONENT
 export const ControlPath = NULL_COMPONENT
 export type { ControlPathProps, PathPoint } from "./controls/path-input"

@@ -1,7 +1,12 @@
 "use client"
 
 import { useEffect } from "react"
+import { colorPopoverStyles } from "../controls/color-popover"
+import { gradientStopsStyles } from "../controls/gradient-stops"
+import { stripeColorsTableStyles } from "../controls/stripe-colors-table"
 import { PANEL_CSS, PANEL_STYLE_ID } from "../styles"
+
+const FULL_CSS = PANEL_CSS + colorPopoverStyles + gradientStopsStyles + stripeColorsTableStyles
 
 let injectedCss: string | null = null
 
@@ -12,7 +17,7 @@ let injectedCss: string | null = null
 export function useInjectPanelStyles(): void {
   useEffect(() => {
     if (typeof document === "undefined") return
-    if (injectedCss === PANEL_CSS) return
+    if (injectedCss === FULL_CSS) return
 
     let style = document.getElementById(PANEL_STYLE_ID) as HTMLStyleElement | null
     if (!style) {
@@ -20,7 +25,7 @@ export function useInjectPanelStyles(): void {
       style.id = PANEL_STYLE_ID
       document.head.appendChild(style)
     }
-    style.textContent = PANEL_CSS
-    injectedCss = PANEL_CSS
+    style.textContent = FULL_CSS
+    injectedCss = FULL_CSS
   }, [])
 }

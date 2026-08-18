@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "../lib/cn"
 import { ControlThemeToggle } from "../controls/theme-toggle"
@@ -95,6 +95,29 @@ export function FloatingPanel({
     }
   }, [collapsed])
 
+  // Arm the body's bottom fade mask while more content is cut off below
+  // the fold (styles.ts keys the mask off .panel-body-cut-off).
+  const bodyRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const sc = bodyRef.current
+    if (!sc) return
+    const update = () =>
+      sc.classList.toggle(
+        "panel-body-cut-off",
+        sc.scrollTop + sc.clientHeight < sc.scrollHeight - 1,
+      )
+    update()
+    sc.addEventListener("scroll", update, { passive: true })
+    const ro = new ResizeObserver(update)
+    ro.observe(sc)
+    // Content grows/shrinks as sections toggle.
+    if (sc.firstElementChild) ro.observe(sc.firstElementChild)
+    return () => {
+      sc.removeEventListener("scroll", update)
+      ro.disconnect()
+    }
+  }, [mounted])
+
   if (!mounted) return null
 
   const panel = (
@@ -164,7 +187,9 @@ export function FloatingPanel({
               </button>
             </div>
           </div>
-          <div className="panel-panel-body">{children}</div>
+          <div className="panel-panel-body" ref={bodyRef}>
+            {children}
+          </div>
         </div>
         {peeking ? (
           <button
