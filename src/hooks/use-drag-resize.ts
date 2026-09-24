@@ -183,7 +183,8 @@ export function usePanelDragResize({
   storageKey,
 }: {
   enabled: boolean
-  /** Float mode plays the entrance when this flips to false. */
+  /** Float mode places the panel (first open) and plays the entrance when
+   *  this flips to false. */
   collapsed: boolean
   /**
    * True once the panel element is actually in the DOM. FloatingPanel renders
@@ -207,12 +208,23 @@ export function usePanelDragResize({
     }
   }, [persistKey])
 
+  // Set once the initial placement (restore or fresh dock) has run, so later
+  // opens keep wherever the panel was left instead of re-docking it.
+  const placedRef = useRef(false)
+
+  // Placement + viewport clamping run only while the panel is visible: the
+  // float CSS hides a collapsed panel with `display: none`, whose zero-size
+  // rect would dock it to the top-left corner. A panel that mounts collapsed
+  // is therefore placed on its first open.
   useEffect(() => {
-    if (!enabled || !ready) return
+    if (!enabled) placedRef.current = false
+    if (!enabled || !ready || collapsed) return
     const el = panelRef.current
     if (!el) return
+    const firstOpen = !placedRef.current
+    placedRef.current = true
     let restored = false
-    if (persistKey) {
+    if (firstOpen && persistKey) {
       try {
         const saved = sessionStorage.getItem(persistKey)
         if (saved) {
@@ -228,7 +240,7 @@ export function usePanelDragResize({
     // taller than the panel's max height, center it vertically; otherwise sit
     // at the top-right corner. Written as explicit left/top so drag/resize and
     // reclamp share one coordinate space.
-    if (!restored) {
+    if (firstOpen && !restored) {
       const m = pin(el)
       const left = vw() - m.r.width - MARGIN
       const top =
@@ -266,7 +278,7 @@ export function usePanelDragResize({
       el.style.transition = ""
       persist()
     }
-  }, [enabled, ready, persistKey, persist])
+  }, [enabled, ready, collapsed, persistKey, persist])
 
   // Entrance: scale up from the docked edge when the panel surfaces.
   useEffect(() => {

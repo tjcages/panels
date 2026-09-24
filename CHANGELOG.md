@@ -23,6 +23,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Panel shell error boundary** — a throw in animation/export/prompts shows `Panel failed to render` instead of crashing the host. (OFF-462)
 - **Bundle gzip budgets** in CI for core and shader, dev and prod entries. (OFF-462)
 
+### Fixed
+- **Float panel first open** — a float panel that mounts collapsed now docks to the right edge on its first open (and scales up from that edge) instead of landing top-left. Placement waits until the panel is visible; the hidden panel measured as 0×0. Window resizes while closed are re-clamped on the next open. (follow-up to OFF-458)
+
 ## [0.1.1] — 2026-08-18
 
 ### Fixed
