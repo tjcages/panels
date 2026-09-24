@@ -1,0 +1,8 @@
+node_modules/
+out/
+public/
+editor/
+*.mp4
+*.wav
+package-lock.json
+pnpm-lock.yaml

@@ -1,0 +1,15 @@
+{
+  "profile": { "mode": "launch", "minFilmFrames": 450, "maxFilmFrames": 780, "maxClipFrames": 110 },
+  "cuts": [
+    { "scene": "hook", "in": 0, "out": 80, "continuity": "momentum" },
+    { "scene": "reveal", "in": 0, "out": 74, "continuity": "momentum" },
+    { "scene": "amplitude", "in": 4, "out": 63, "continuity": "momentum" },
+    { "scene": "lines", "in": 6, "out": 72, "continuity": "momentum" },
+    { "scene": "color", "in": 2, "out": 94, "continuity": "momentum" },
+    { "scene": "backdrop", "in": 8, "out": 64, "continuity": "impact" },
+    { "scene": "collection", "in": 8, "out": 77, "continuity": "momentum" },
+    { "scene": "float", "in": 4, "out": 90, "continuity": "momentum" },
+    { "scene": "prod", "in": 0, "out": 74, "continuity": "impact" },
+    { "scene": "end", "in": 0, "out": 100, "continuity": "momentum" }
+  ]
+}
