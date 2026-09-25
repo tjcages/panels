@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "fps": 30,
+  "cues": [
+    {
+      "id": "hook-live",
+      "scene": "hook",
+      "frame": 13,
+      "sound": "sparkle",
+      "volume": 0.8,
+      "label": "\"live.\" lands"
+    },
+    {
+      "id": "reveal-open",
+      "scene": "reveal",
+      "frame": 35,
+      "sound": "arrival",
+      "volume": 0.9,
+      "label": "Panel opens (\u2318\u2325D)"
+    },
+    {
+      "id": "amp-press",
+      "scene": "amplitude",
+      "frame": 17,
+      "sound": "press",
+      "volume": 0.95,
+      "label": "Grab Amplitude"
+    },
+    {
+      "id": "amp-release",
+      "scene": "amplitude",
+      "frame": 53,
+      "sound": "release",
+      "volume": 0.8,
+      "label": "Release Amplitude"
+    },
+    {
+      "id": "lines-press",
+      "scene": "lines",
+      "frame": 21,
+      "sound": "press",
+      "volume": 0.95,
+      "label": "Grab Lines"
+    },
+    {
+      "id": "lines-release",
+      "scene": "lines",
+      "frame": 59,
+      "sound": "release",
+      "volume": 0.8,
+      "label": "Release Lines"
+    },
+    {
+      "id": "color-open",
+      "scene": "color",
+      "frame": 15,
+      "sound": "press",
+      "volume": 0.95,
+      "label": "Open Tint popover"
+    },
+    {
+      "id": "color-pick",
+      "scene": "color",
+      "frame": 66,
+      "sound": "droplet",
+      "volume": 0.85,
+      "label": "Pick Pink 500"
+    },
+    {
+      "id": "backdrop-click",
+      "scene": "backdrop",
+      "frame": 27,
+      "sound": "toggle",
+      "volume": 1.0,
+      "label": "Backdrop \u2192 Dark"
+    },
+    {
+      "id": "backdrop-dark",
+      "scene": "backdrop",
+      "frame": 29,
+      "sound": "bloom",
+      "volume": 0.6,
+      "label": "Page goes dark"
+    },
+    {
+      "id": "ribbon-add",
+      "scene": "collection",
+      "frame": 33,
+      "sound": "press",
+      "volume": 0.95,
+      "label": "Add Ribbon"
+    },
+    {
+      "id": "ribbon-appears",
+      "scene": "collection",
+      "frame": 35,
+      "sound": "sparkle",
+      "volume": 0.8,
+      "label": "Blue ribbon joins"
+    },
+    {
+      "id": "float-grab",
+      "scene": "float",
+      "frame": 32,
+      "sound": "press",
+      "volume": 0.95,
+      "label": "Grab header"
+    },
+    {
+      "id": "float-throw",
+      "scene": "float",
+      "frame": 52,
+      "sound": "page",
+      "volume": 0.9,
+      "label": "Throw"
+    },
+    {
+      "id": "float-dock",
+      "scene": "float",
+      "frame": 60,
+      "sound": "tick",
+      "volume": 0.9,
+      "label": "Docks left"
+    },
+    {
+      "id": "prod-hit",
+      "scene": "prod",
+      "frame": 0,
+      "sound": "pulse",
+      "volume": 0.85,
+      "label": "Impact into prod title"
+    },
+    {
+      "id": "end-mark",
+      "scene": "end",
+      "frame": 2,
+      "sound": "chime",
+      "volume": 0.8,
+      "label": "Brand lands"
+    }
+  ]
+}

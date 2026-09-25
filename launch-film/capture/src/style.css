@@ -1,0 +1,9 @@
+/* Host page. The reset mirrors Tailwind preflight, which the panel's hosts ship. */
+*, *::before, *::after { box-sizing: border-box; border: 0 solid; margin: 0; padding: 0; }
+button, input, select, textarea { font: inherit; color: inherit; background: transparent; }
+button { cursor: pointer; }
+html, body, #root { height: 100%; overflow: hidden; }
+body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.stage { position: fixed; inset: 0; background: #f4f2ee; transition: background-color 420ms ease; }
+.stage[data-backdrop="dark"] { background: #0d0d0f; }
+.waves { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
